@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão Médica - Clínica Saúde Total</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .calendar-day {
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day:hover {
+            background-color: #dbeafe;
+            transform: scale(1.05);
+        }
+        
+        .patient-record {
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .patient-record:hover {
+            border-left-color: var(--primary);
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="flex">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 min-h-screen text-white p-4 hidden md:block">
+        <div class="text-center mb-8">
+            <img src="https://placehold.co/120x120" alt="Logo da Clínica Saúde Total - ícone médico estilizado com cruz azul e branca" class="mx-auto rounded-full border-4 border-white mb-3">
+            <h1 class="text-xl font-bold">Clínica Saúde Total</h1>
+            <p class="text-sm opacity-80">Sistema de Gestão Médica</p>
+        </div>
+        
+        <nav class="space-y-2">
+            <a href="#dashboard" class="nav-item flex items-center p-3 rounded-lg bg-blue-700">
+                <i class="fas fa-tachometer-alt w-6"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#agendamentos" class="nav-item flex items-center p-3 rounded-lg">
+                <i class="fas fa-calendar-alt w-6"></i>
+                <span>Agendamentos</span>
+            </a>
+            <a href="#pacientes" class="nav-item flex items-center p-3 rounded-lg">
+                <i class="fas fa-user-injured w-6"></i>
+                <span>Pacientes</span>
+            </a>
+            <a href="#prontuarios" class="nav-item flex items-center p-3 rounded-lg">
+                <i class="fas fa-file-medical w-6"></i>
+                <span>Prontuários</span>
+            </a>
+            <a href="#relatorios" class="nav-item flex items-center p-3 rounded-lg">
+                <i class="fas fa-chart-bar w-6"></i>
+                <span>Relatórios</span>
+            </a>
+            <a href="#configuracoes" class="nav-item flex items-center p-3 rounded-lg">
+                <i class="fas fa-cog w-6"></i>
+                <span>Configurações</span>
+            </a>
+        </nav>
+        
+        <div class="mt-auto pt-8 border-t border-blue-400">
+            <div class="flex items-center p-3">
+                <img src="https://placehold.co/40x40" alt="Foto de perfil do médico Dr. Silva - homem profissional com jaleco branco" class="rounded-full mr-3">
+                <div>
+                    <p class="text-sm font-medium">Dr. Silva</p>
+                    <p class="text-xs opacity-70">Médico Cardiologista</p>
+                </div>
+            </div>
+            <button onclick="logout()" class="w-full mt-2 p-3 text-left rounded-lg hover:bg-blue-700">
+                <i class="fas fa-sign-out-alt w-6"></i>
+                Sair
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1">
+        <!-- Top Bar -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <button class="md:hidden text-blue-600">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            
+            <div class="relative">
+                <input type="text" placeholder="Buscar..." class="px-4 py-2 border rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button onclick="toggleNotifications()" class="p-2 text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div id="notificationPanel" class="hidden absolute right-0 mt-2 w-80 bg-white shadow-xl rounded-lg p-4 z-50">
+                        <h3 class="font-bold mb-3">Notificações (3)</h3>
+                        <div class="space-y-2">
+                            <div class="p-2 border-l-4 border-blue-500 bg-blue-50">
+                                <p class="text-sm">Nova consulta agendada para amanhã às 14:00</p>
+                                <p class="text-xs text-gray-500">há 2 minutos</p>
+                            </div>
+                            <div class="p-2 border-l-4 border-green-500 bg-green-50">
+                                <p class="text-sm">Resultados de exames disponíveis - Paciente Maria</p>
+                                <p class="text-xs text-gray-500">há 1 hora</p>
+                            </div>
+                            <div class="p-2 border-l-4 border-red-500 bg-red-50">
+                                <p class="text-sm">Lembrete: Reabastecer medicamentos</p>
+                                <p class="text-xs text-gray-500">há 3 horas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <img src="https://placehold.co/40x40" alt="Foto de perfil do médico Dr. Silva - homem profissional com jaleco branco" class="rounded-full mr-2">
+                    <span class="hidden md:inline">Dr. Silva</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6" id="mainContent">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section">
+                <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card rounded-lg p-6 shadow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Consultas Hoje</p>
+                                <p class="text-3xl font-bold">12</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card rounded-lg p-6 shadow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Pacientes Ativos</p>
+                                <p class="text-3xl font-bold">284</p>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-user-injured text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card rounded-lg p-6 shadow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Prontuários</p>
+                                <p class="text-3xl font-bold">1,247</p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-file-medical text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card rounded-lg p-6 shadow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Faturamento Mensal</p>
+                                <p class="text-3xl font-bold">R$ 45,2K</p>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <i class="fas fa-dollar-sign text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white rounded-lg p-6 shadow">
+                        <h2 class="text-xl font-bold mb-4">Consultas do Dia</h2>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 border rounded">
+                                <div>
+                                    <p class="font-medium">Maria Silva - Cardiologia</p>
+                                    <p class="text-sm text-gray-600">09:00 - 09:30</p>
+                                </div>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Confirmada</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 border rounded">
+                                <div>
+                                    <p class="font-medium">João Santos - Ortopedia</p>
+                                    <p class="text-sm text-gray-600">10:15 - 10:45</p>
+                                </div>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">Pendente</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 border rounded">
+                                <div>
+                                    <p class="font-medium">Ana Costa - Pediatria</p>
+                                    <p class="text-sm text-gray-600">11:30 - 12:00</p>
+                                </div>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Confirmada</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow">
+                        <h2 class="text-xl font-bold mb-4">Estatísticas Rápidas</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-gray-600 mb-1">Taxa de Ocupação</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <p class="text-right text-sm mt-1">75%</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 mb-1">Satisfação do Paciente</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: 92%"></div>
+                                </div>
+                                <p class="text-right text-sm mt-1">92%</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 mb-1">Tempo Médio de Espera</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-yellow-600 h-2 rounded-full" style="width: 35%"></div>
+                                </div>
+                                <p class="text-right text-sm mt-1">15 min</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Agendamentos Section -->
+            <section id="agendamentos" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold">Agendamentos</h1>
+                    <button onclick="openNewAppointmentModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-plus mr-2"></i>Novo Agendamento
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="flex justify-between mb-4">
+                        <h2 class="text-xl font-bold">Calendário</h2>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border rounded"><i class="fas fa-chevron-left"></i></button>
+                            <span class="px-4 py-1 font-medium">Novembro 2024</span>
+                            <button class="px-3 py-1 border rounded"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-2 mb-4 text-center">
+                        <div class="font-bold text-gray-600">Dom</div>
+                        <div class="font-bold text-gray-600">Seg</div>
+                        <div class="font-bold text-gray-600">Ter</div>
+                        <div class="font-bold text-gray-600">Qua</div>
+                        <div class="font-bold text-gray-600">Qui</div>
+                        <div class="font-bold text-gray-600">Sex</div>
+                        <div class="font-bold text-gray-600">Sáb</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-2">
+                        <!-- Calendar days will be generated here -->
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-bold mb-4">Próximos Agendamentos</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-3">Paciente</th>
+                                    <th class="text-left p-3">Especialidade</th>
+                                    <th class="text-left p-3">Data/Hora</th>
+                                    <th class="text-left p-3">Status</th>
+                                    <th class="text-left p-3">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Maria Silva</td>
+                                    <td class="p-3">Cardiologia</td>
+                                    <td class="p-3">25/11/2024 09:00</td>
+                                    <td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Confirmado</span></td>
+                                    <td class="p-3">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">João Santos</td>
+                                    <td class="p-3">Ortopedia</td>
+                                    <td class="p-3">25/11/2024 10:15</td>
+                                    <td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">Pendente</span></td>
+                                    <td class="p-3">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Ana Costa</td>
+                                    <td class="p-3">Pediatria</td>
+                                    <td class="p-3">25/11/2024 11:30</td>
+                                    <td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Confirmado</span></td>
+                                    <td class="p-3">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Modal para Novo Agendamento -->
+            <div id="appointmentModal" class="modal">
+                <div class="modal-content bg-white rounded-lg w-11/12 md:w-1/2 lg:w-1/3 mx-auto mt-20 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Novo Agendamento</h2>
+                        <button onclick="closeModal('appointmentModal')" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <form id="appointmentForm">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Paciente</label>
+                            <select class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>Selecione um paciente</option>
+                                <option>Maria Silva</option>
+                                <option>João Santos</option>
+                                <option>Ana Costa</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Especialidade</label>
+                            <select class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>Cardiologia</option>
+                                <option>Ortopedia</option>
+                                <option>Pediatria</option>
+                                <option>Dermatologia</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Data</label>
+                                <input type="date" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Hora</label>
+                                <input type="time" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Observações</label>
+                            <textarea class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 border rounded text-gray-700 hover:bg-gray-100">Cancelar</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simulação de dados para demonstração
+        const mockData = {
+            appointments: [
+                { id: 1, patient: "Maria Silva", specialty: "Cardiologia", date: "2024-11-25", time: "09:00", status: "confirmed" },
+                { id: 2, patient: "João Santos", specialty: "Ortopedia", date: "2024-11-25", time: "10:15", status: "pending" },
+                { id: 3, patient: "Ana Costa", specialty: "Pediatria", date: "2024-11-25", time: "11:30", status: "confirmed" }
+            ],
+            patients: [
+                { id: 1, name: "Maria Silva", age: 45, lastVisit: "2024-10-15", status: "active" },
+                { id: 2, name: "João Santos", age: 32, lastVisit: "2024-11-10", status: "active" },
+                { id: 3, name: "Ana Costa", age: 28, lastVisit: "2024-11-18", status: "active" }
+            ]
+        };
+
+        // Navegação entre seções
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href').substring(1);
+                
+                // Atualizar navegação ativa
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('bg-blue-700'));
+                this.classList.add('bg-blue-700');
+                
+                // Mostrar seção correspondente
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.getElementById(target).classList.remove('hidden');
+            });
+        });
+
+        // Toggle notifications panel
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        // Modal functions
+        function openNewAppointmentModal() {
+            document.getElementById('appointmentModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Form submission
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Agendamento criado com sucesso!');
+            closeModal('appointmentModal');
+        });
+
+        // Logout function
+        function logout() {
+            if(confirm('Deseja realmente sair do sistema?')) {
+                alert('Logout realizado com sucesso!');
+                // Redirecionar para página de login
+            }
+        }
+
+        // Calendar generation (simplified)
+        function generateCalendar() {
+            const calendarGrid = document.querySelector('.grid.grid-cols-7.gap-2:last-child');
+            calendarGrid.innerHTML = '';
+            
+            // Generate empty days for the start of the month
+            for (let i = 0; i < 5; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'p-2 text-center text-gray-400';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Generate days 1-30
+            for (let day = 1; day <= 30; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day p-2 text-center border rounded cursor-pointer hover:bg-blue-100';
+                dayElement.textContent = day;
+                
+                // Add appointments indicator
+                if ([5, 12, 19, 25].includes(day)) {
+                    dayElement.innerHTML = `${day} <span class="w-2 h-2 bg-blue-600 rounded-full inline-block"></span>`;
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        // Initialize calendar
+        generateCalendar();
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // API Simulation (RESTful endpoints)
+        const api = {
+            // Get appointments
+            getAppointments: () => {
+                return new Promise(resolve => {
+                    setTimeout(() => resolve(mockData.appointments), 500);
+                });
+            },
+            
+            // Create appointment
+            createAppointment: (appointment) => {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        const newAppointment = { ...appointment, id: Date.now() };
+                        mockData.appointments.push(newAppointment);
+                        resolve(newAppointment);
+                    }, 500);
+                });
+            },
+            
+            // Get patients
+            getPatients: () => {
+                return new Promise(resolve => {
+                    setTimeout(() => resolve(mockData.patients), 500);
+                });
+            }
+        };
+
+        // Demo: Fetch appointments on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            api.getAppointments().then(appointments => {
+                console.log('Agendamentos carregados:', appointments);
+            });
+        });
+    </script>
+</body>
+</html>
+

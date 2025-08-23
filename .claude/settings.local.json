@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(for:*)",
+      "Bash(do mv \"$file\" \"$file%.jsx.tsx\")",
+      "Bash(done)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npm run init-db:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm rebuild:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

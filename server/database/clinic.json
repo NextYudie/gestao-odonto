@@ -1,0 +1,125 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Dr. Silva",
+      "email": "admin@clinica.com",
+      "password": "$2a$12$I90qHHMQ9Qcx5H5toVWS9.v6ZiETfiHhGK9VgdlYPN2E7ivSvTX1e",
+      "role": "admin",
+      "crm": "123456",
+      "phone": null,
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 2,
+      "name": "Dra. Santos",
+      "email": "medico@clinica.com",
+      "password": "$2a$12$hRk9HaF45m/J/VZ3bL5xouGH3SsNea1OZGap0kSUvQ/yH6r0BWvfK",
+      "role": "doctor",
+      "crm": "654321",
+      "phone": null,
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    }
+  ],
+  "patients": [
+    {
+      "id": 1,
+      "name": "Maria Silva",
+      "email": "maria@email.com",
+      "phone": "(11) 99999-1111",
+      "birth_date": "1979-05-15",
+      "cpf": "111.111.111-11",
+      "address": "Rua das Flores, 123",
+      "emergency_contact": null,
+      "medical_history": null,
+      "status": "active",
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 2,
+      "name": "João Santos",
+      "email": "joao@email.com",
+      "phone": "(11) 99999-2222",
+      "birth_date": "1992-08-22",
+      "cpf": "222.222.222-22",
+      "address": "Av. Paulista, 456",
+      "emergency_contact": null,
+      "medical_history": null,
+      "status": "active",
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 3,
+      "name": "Ana Costa",
+      "email": "ana@email.com",
+      "phone": "(11) 99999-3333",
+      "birth_date": "1996-12-03",
+      "cpf": "333.333.333-33",
+      "address": "Rua Augusta, 789",
+      "emergency_contact": null,
+      "medical_history": null,
+      "status": "active",
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 5,
+      "name": "Yudi tamashiro",
+      "email": "Yudi tamashiro",
+      "phone": "yudi@teste.com.br",
+      "birth_date": "421412412124124124",
+      "cpf": "2025-08-01",
+      "address": "123.124.543-54",
+      "emergency_contact": "Rua Joaquim Nabuco23123",
+      "medical_history": "441209412409",
+      "status": "Baiano"
+    }
+  ],
+  "appointments": [
+    {
+      "id": 1,
+      "patient_id": 1,
+      "doctor_id": 1,
+      "specialty": "Cardiologia",
+      "appointment_date": "2025-08-24",
+      "appointment_time": "09:00:00",
+      "duration": 30,
+      "status": "confirmed",
+      "notes": null,
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 2,
+      "patient_id": 2,
+      "doctor_id": 2,
+      "specialty": "Pediatria",
+      "appointment_date": "2025-08-24",
+      "appointment_time": "10:15:00",
+      "duration": 30,
+      "status": "scheduled",
+      "notes": null,
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 3,
+      "patient_id": 3,
+      "doctor_id": 1,
+      "specialty": "Cardiologia",
+      "appointment_date": "2025-08-24",
+      "appointment_time": "11:30:00",
+      "duration": 30,
+      "status": "confirmed",
+      "notes": null,
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    }
+  ],
+  "medical_records": [],
+  "notifications": []
+}
