@@ -16,10 +16,10 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
   ];
 
   const specialties = [
-    'Cardiologia',
-    'Ortopedia',
-    'Pediatria',
-    'Dermatologia'
+    'Clinico Geral',
+    'Estética',
+    'Periodontia',
+    'Ortodontia'
   ];
 
   const handleInputChange = (e) => {

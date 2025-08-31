@@ -76,7 +76,7 @@
       "address": "123.124.543-54",
       "emergency_contact": "Rua Joaquim Nabuco23123",
       "medical_history": "441209412409",
-      "status": "Baiano"
+      "status": "sahur"
     }
   ],
   "appointments": [
@@ -84,7 +84,7 @@
       "id": 1,
       "patient_id": 1,
       "doctor_id": 1,
-      "specialty": "Cardiologia",
+      "specialty": "Odont.Est",
       "appointment_date": "2025-08-24",
       "appointment_time": "09:00:00",
       "duration": 30,
@@ -97,7 +97,7 @@
       "id": 2,
       "patient_id": 2,
       "doctor_id": 2,
-      "specialty": "Pediatria",
+      "specialty": "teste233",
       "appointment_date": "2025-08-24",
       "appointment_time": "10:15:00",
       "duration": 30,
@@ -110,7 +110,7 @@
       "id": 3,
       "patient_id": 3,
       "doctor_id": 1,
-      "specialty": "Cardiologia",
+      "specialty": "Periodontia",
       "appointment_date": "2025-08-24",
       "appointment_time": "11:30:00",
       "duration": 30,
@@ -129,7 +129,7 @@
       "email": "house@email.com",
       "phone": "(11) 99999-1111",
       "crm": "123456-SP",
-      "specialty": "Infectologista",
+      "specialty": "Clinico Geral",
       "status": "active",
       "created_at": "2025-08-23T07:34:44.402Z",
       "updated_at": "2025-08-23T07:34:44.402Z"
@@ -178,6 +178,15 @@
       "crm": "32343434",
       "specialty": "21312312",
       "status": "especialidade"
+    },
+    {
+      "id": 7,
+      "name": "Raldo lukas",
+      "email": "Raldo lukas",
+      "phone": "raldo@fire.com",
+      "crm": "123213123125",
+      "specialty": "123123556",
+      "status": "senor de la noche"
     }
   ]
 }
