@@ -47,12 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
   return (
     <div className="sidebar w-64 min-h-screen text-white p-4 hidden md:block">
       <div className="text-center mb-8">
-        <img
-          src="https://placehold.co/120x120"
-          alt="Logo da Clínica Saúde Total"
-          className="mx-auto rounded-full border-4 border-white mb-3"
-        />
-        <h1 className="text-xl font-bold">Clínica Saúde Total</h1>
+        <h1 className="text-xl font-bold">Clínica Sahur</h1>
         <p className="text-sm opacity-80">Sistema de Gestão Médica</p>
       </div>
 
@@ -95,11 +90,11 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
       </nav>
 
       <div className="mt-auto pt-8 border-t border-blue-400">
-        <div className="flex items-center p-3">
+        <div className="flex items-center p-1">
           <img
-            src="https://placehold.co/40x40"
+            src="https://i.cbc.ca/1.5359228.1577206958!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_1180/smudge-the-viral-cat.jpg?im="
             alt={`Foto de perfil do ${user?.name}`}
-            className="rounded-full mr-3 w-10 h-10"
+            className="rounded-full mr-3 w-20 h-20"
           />
           <div>
             <p className="text-sm font-medium">{user?.name}</p>

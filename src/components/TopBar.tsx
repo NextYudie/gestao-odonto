@@ -115,7 +115,7 @@ const TopBar: React.FC<TopBarProps> = ({ notificationCount, user }) => {
 
         <div className="flex items-center">
           <img
-            src="https://placehold.co/40x40"
+            src="https://i.cbc.ca/1.5359228.1577206958!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_1180/smudge-the-viral-cat.jpg?im="
             alt={`Foto de perfil do ${user?.name}`}
             className="rounded-full mr-2 w-10 h-10"
           />

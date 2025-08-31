@@ -2,10 +2,10 @@
   "users": [
     {
       "id": 2,
-      "name": "Dra. Santos",
+      "name": "Dra. Isadora Helena",
       "email": "medico@clinica.com",
       "password": "$2a$12$hRk9HaF45m/J/VZ3bL5xouGH3SsNea1OZGap0kSUvQ/yH6r0BWvfK",
-      "role": "doctor",
+      "role": "Clínica Geral",
       "crm": "654321",
       "phone": null,
       "created_at": "2025-08-23T07:34:44.402Z",
