@@ -1,4 +1,4 @@
-import type { Appointment, Patient, User } from "../types";
+import type { Appointment, Patient, User, Doctor } from "../types";
 
 const API_BASE_URL = "http://localhost:3001/api";
 
@@ -251,6 +251,57 @@ class ApiService {
     );
 
     return this.handleResponse<ApiResponse<string[]>>(response);
+  }
+
+  // Doctors
+  async getDoctors(page = 1, limit = 20, search = ""): Promise<ApiResponse<PaginatedResponse<Doctor>>> {
+    const response = await fetch(`${API_BASE_URL}/doctors?page=${page}&limit=${limit}&search=${search}`, {
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse<PaginatedResponse<Doctor>>>(response);
+  }
+
+  async getDoctor(id: number): Promise<ApiResponse<Doctor>> {
+    const response = await fetch(`${API_BASE_URL}/doctors/${id}`, {
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse<Doctor>>(response);
+  }
+
+  async createDoctor(
+    doctor: Omit<Doctor, "id" | "created_at" | "updated_at">
+  ): Promise<ApiResponse<Doctor>> {
+    const response = await fetch(`${API_BASE_URL}/doctors`, {
+      method: "POST",
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(doctor),
+    });
+
+    return this.handleResponse<ApiResponse<Doctor>>(response);
+  }
+
+  async updateDoctor(
+    id: number,
+    doctor: Partial<Doctor>
+  ): Promise<ApiResponse<Doctor>> {
+    const response = await fetch(`${API_BASE_URL}/doctors/${id}`, {
+      method: "PUT",
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(doctor),
+    });
+
+    return this.handleResponse<ApiResponse<Doctor>>(response);
+  }
+
+  async deleteDoctor(id: number): Promise<ApiResponse> {
+    const response = await fetch(`${API_BASE_URL}/doctors/${id}`, {
+      method: "DELETE",
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse>(response);
   }
 }
 

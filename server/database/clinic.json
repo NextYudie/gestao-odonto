@@ -1,23 +1,23 @@
 {
   "users": [
     {
-      "id": 1,
-      "name": "Dr. Silva",
-      "email": "admin@clinica.com",
-      "password": "$2a$12$I90qHHMQ9Qcx5H5toVWS9.v6ZiETfiHhGK9VgdlYPN2E7ivSvTX1e",
-      "role": "admin",
-      "crm": "123456",
-      "phone": null,
-      "created_at": "2025-08-23T07:34:44.402Z",
-      "updated_at": "2025-08-23T07:34:44.402Z"
-    },
-    {
       "id": 2,
       "name": "Dra. Santos",
       "email": "medico@clinica.com",
       "password": "$2a$12$hRk9HaF45m/J/VZ3bL5xouGH3SsNea1OZGap0kSUvQ/yH6r0BWvfK",
       "role": "doctor",
       "crm": "654321",
+      "phone": null,
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 1,
+      "name": "Dr. Silva",
+      "email": "admin@clinica.com",
+      "password": "$2a$12$I90qHHMQ9Qcx5H5toVWS9.v6ZiETfiHhGK9VgdlYPN2E7ivSvTX1e",
+      "role": "admin",
+      "crm": "123456",
       "phone": null,
       "created_at": "2025-08-23T07:34:44.402Z",
       "updated_at": "2025-08-23T07:34:44.402Z"
@@ -121,5 +121,63 @@
     }
   ],
   "medical_records": [],
-  "notifications": []
+  "notifications": [],
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. House",
+      "email": "house@email.com",
+      "phone": "(11) 99999-1111",
+      "crm": "123456-SP",
+      "specialty": "Infectologista",
+      "status": "active",
+      "created_at": "2025-08-23T07:34:44.402Z",
+      "updated_at": "2025-08-23T07:34:44.402Z"
+    },
+    {
+      "id": 2,
+      "name": "Teste completo",
+      "email": "Teste completo",
+      "phone": "teste@gmail.com",
+      "crm": "3423234",
+      "specialty": "213445656",
+      "status": "Dentes2"
+    },
+    {
+      "id": 3,
+      "name": "Teste2",
+      "email": "Teste2",
+      "phone": "teste@gmail.com",
+      "crm": "2131141556",
+      "specialty": "58985445-PR",
+      "status": "Dente3"
+    },
+    {
+      "id": 4,
+      "name": "Teste2",
+      "email": "Teste2",
+      "phone": "teste@gmail.com",
+      "crm": "2131141556",
+      "specialty": "58985445-PR",
+      "status": "Dente3"
+    },
+    {
+      "id": 5,
+      "name": "Teste4",
+      "email": "Teste4",
+      "phone": "teste@gmail.com",
+      "crm": "32343434",
+      "specialty": "21312312",
+      "status": "especialidade"
+    },
+    {
+      "id": 6,
+      "name": "Teste4",
+      "email": "Teste4",
+      "phone": "teste@gmail.com",
+      "crm": "32343434",
+      "specialty": "21312312",
+      "status": "especialidade"
+    }
+  ]
 }

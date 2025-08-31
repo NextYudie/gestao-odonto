@@ -5,8 +5,8 @@ import React, {
   useState,
   type ReactNode,
 } from "react";
-import type { AuthContextType, User } from "../types";
 import apiService from "../services/api";
+import type { AuthContextType, User } from "../types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       const token = localStorage.getItem("token");
-      
+
       if (token) {
         try {
           const response = await apiService.getMe();
@@ -49,27 +49,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           localStorage.removeItem("user");
         }
       }
-      
+
       setLoading(false);
     };
 
     checkAuthStatus();
   }, []);
 
-  const login = async (email: string, password: string, rememberMe: boolean = false): Promise<void> => {
+  const login = async (
+    email: string,
+    password: string,
+    rememberMe: boolean = false
+  ): Promise<void> => {
     try {
       const response = await apiService.login({ email, password });
-      
+
       if (response.success && response.data) {
         const { user: userData, token, refreshToken } = response.data;
-        
+
         setUser(userData);
         setIsAuthenticated(true);
 
         localStorage.setItem("token", token);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("user", JSON.stringify(userData));
-        
+
         if (rememberMe) {
           localStorage.setItem("remember_me", "true");
         }

@@ -42,6 +42,19 @@ export interface Patient {
   updated_at?: string;
 }
 
+export interface Doctor {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  crm: string;
+  specialty: string;
+  status: "active" | "inactive";
+  created_at: string;
+  updated_at: string;
+}
+
+
 export interface Notification {
   id: number;
   message: string;
@@ -84,4 +97,14 @@ export interface AppointmentFormData {
   date: string;
   time: string;
   observations: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    current_page: number;
+    per_page: number;
+    total: number;
+    total_pages: number;
+  };
 }

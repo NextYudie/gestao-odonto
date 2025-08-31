@@ -144,3 +144,40 @@ export const validateUserInput = (data: any, isUpdate = false): ValidationResult
     errors: error ? error.details.map(detail => detail.message) : []
   };
 };
+
+// Doctor validation
+export const validateDoctorInput = (data: any, isUpdate = false): ValidationResult => {
+  const schema = Joi.object({
+    name: isUpdate 
+      ? Joi.string().min(2).max(100).optional()
+      : Joi.string().min(2).max(100).required().messages({
+          'string.min': 'Nome deve ter pelo menos 2 caracteres',
+          'string.max': 'Nome deve ter no máximo 100 caracteres',
+          'any.required': 'Nome é obrigatório'
+        }),
+    email: Joi.string().email().optional().allow('').messages({
+      'string.email': 'E-mail deve ter um formato válido'
+    }),
+    phone: Joi.string().optional().allow(''),
+    crm: isUpdate
+      ? Joi.string().max(20).optional()
+      : Joi.string().max(20).required().messages({
+          'string.max': 'CRM deve ter no máximo 20 caracteres',
+          'any.required': 'CRM é obrigatório'
+        }),
+    specialty: isUpdate
+        ? Joi.string().max(100).optional()
+        : Joi.string().max(100).required().messages({
+            'string.max': 'Especialidade deve ter no máximo 100 caracteres',
+            'any.required': 'Especialidade é obrigatória'
+            }),
+    status: Joi.string().valid('active', 'inactive').optional()
+  });
+
+  const { error } = schema.validate(data);
+  
+  return {
+    isValid: !error,
+    errors: error ? error.details.map(detail => detail.message) : []
+  };
+};

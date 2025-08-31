@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import type { User } from "../types";
 
@@ -9,7 +9,17 @@ interface NavigationItem {
   icon: string;
 }
 
-const navigation: NavigationItem[] = [
+const navigationAdmin: NavigationItem[] = [
+  { path: "/", label: "Dashboard", icon: "fas fa-tachometer-alt" },
+  { path: "/agendamentos", label: "Agendamentos", icon: "fas fa-calendar-alt" },
+  { path: "/pacientes", label: "Pacientes", icon: "fas fa-user-injured" },
+  { path: "/prontuarios", label: "Prontuários", icon: "fas fa-file-medical" },
+  { path: "/relatorios", label: "Relatórios", icon: "fas fa-chart-bar" },
+  { path: "/admin", label: "Admin", icon: "fas fa-user-shield" },
+  { path: "/configuracoes", label: "Configurações", icon: "fas fa-cog" },
+];
+
+const navigationMedic: NavigationItem[] = [
   { path: "/", label: "Dashboard", icon: "fas fa-tachometer-alt" },
   { path: "/agendamentos", label: "Agendamentos", icon: "fas fa-calendar-alt" },
   { path: "/pacientes", label: "Pacientes", icon: "fas fa-user-injured" },
@@ -24,12 +34,15 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ user }) => {
   const { logout } = useAuth();
+  console.log(user);
 
   const handleLogout = (): void => {
     if (window.confirm("Deseja realmente sair do sistema?")) {
       logout();
     }
   };
+
+  const isAdmin = user?.role === "admin";
 
   return (
     <div className="sidebar w-64 min-h-screen text-white p-4 hidden md:block">
@@ -44,20 +57,41 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
       </div>
 
       <nav className="space-y-2 flex-1">
-        {navigation.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `nav-item w-full flex items-center p-3 rounded-lg text-left transition-all duration-300 ${
-                isActive ? "bg-blue-700" : "hover:bg-blue-600"
-              }`
-            }
-          >
-            <i className={`${item.icon} w-6 mr-3`}></i>
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
+        {isAdmin ? (
+          <>
+            {navigationAdmin.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `nav-item w-full flex items-center p-3 rounded-lg text-left transition-all duration-300 ${
+                    isActive ? "bg-blue-700" : "hover:bg-blue-600"
+                  }`
+                }
+              >
+                <i className={`${item.icon} w-6 mr-3`}></i>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </>
+        ) : (
+          <>
+            {navigationMedic.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `nav-item w-full flex items-center p-3 rounded-lg text-left transition-all duration-300 ${
+                    isActive ? "bg-blue-700" : "hover:bg-blue-600"
+                  }`
+                }
+              >
+                <i className={`${item.icon} w-6 mr-3`}></i>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </>
+        )}
       </nav>
 
       <div className="mt-auto pt-8 border-t border-blue-400">

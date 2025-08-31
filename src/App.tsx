@@ -1,21 +1,26 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import "./App.css";
-import { AuthProvider, useAuth } from "./hooks/useAuth";
-import Login from "./components/Login";
-import LoadingSpinner from "./components/LoadingSpinner";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Layout from "./components/Layout";
-import Dashboard from "./components/Dashboard";
 import Agendamentos from "./components/Agendamentos";
+import Dashboard from "./components/Dashboard";
+import Layout from "./components/Layout";
+import LoadingSpinner from "./components/LoadingSpinner";
+import Login from "./components/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
+import AdminPage from "./pages/AdminPage";
+import ConfiguracoesPage from "./pages/ConfiguracoesPage";
 import PacientesPage from "./pages/PacientesPage";
 import ProntuariosPage from "./pages/ProntuariosPage";
 import RelatoriosPage from "./pages/RelatoriosPage";
-import ConfiguracoesPage from "./pages/ConfiguracoesPage";
-import type { User } from "./types";
 
 const AppRoutes: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -23,17 +28,11 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Routes>
-      <Route 
-        path="/login" 
-        element={
-          isAuthenticated ? (
-            <Navigate to="/" replace />
-          ) : (
-            <Login />
-          )
-        } 
+      <Route
+        path="/login"
+        element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
       />
-      
+
       <Route
         path="/"
         element={
@@ -48,8 +47,12 @@ const AppRoutes: React.FC = () => {
         <Route path="prontuarios" element={<ProntuariosPage />} />
         <Route path="relatorios" element={<RelatoriosPage />} />
         <Route path="configuracoes" element={<ConfiguracoesPage />} />
+
+        {user?.role === "admin" && (
+          <Route path="admin" element={<AdminPage />} />
+        )}
       </Route>
-      
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

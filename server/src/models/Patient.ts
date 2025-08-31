@@ -90,7 +90,7 @@ export class PatientModel {
     const query = `UPDATE patients SET ${fields.join(', ')} WHERE id = ?`;
     const result: any = await executeQuery(query, values);
     
-    return result.affectedRows > 0;
+    return result.length > 0 && result[0].changes > 0;
   }
 
   static async delete(id: number): Promise<boolean> {

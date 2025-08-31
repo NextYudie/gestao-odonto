@@ -1,8 +1,13 @@
-import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import { UserModel } from '@/models/User';
-import { ApiResponse, LoginRequest, LoginResponse, AuthTokenPayload } from '@/types';
-import { validateLoginInput } from '@/utils/validation';
+import { UserModel } from "@/models/User";
+import {
+  ApiResponse,
+  AuthTokenPayload,
+  LoginRequest,
+  LoginResponse,
+} from "@/types";
+import { validateLoginInput } from "@/utils/validation";
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 
 export class AuthController {
   static async login(req: Request, res: Response): Promise<void> {
@@ -14,8 +19,8 @@ export class AuthController {
       if (!validation.isValid) {
         res.status(400).json({
           success: false,
-          message: 'Dados de entrada inválidos',
-          error: validation.errors.join(', ')
+          message: "Dados de entrada inválidos",
+          error: validation.errors.join(", "),
         } as ApiResponse);
         return;
       }
@@ -25,17 +30,21 @@ export class AuthController {
       if (!user) {
         res.status(401).json({
           success: false,
-          message: 'Credenciais inválidas'
+          message: "Credenciais inválidas",
         } as ApiResponse);
         return;
       }
+      console.log(user);
 
       // Validate password
-      const isValidPassword = await UserModel.validatePassword(password, user.password);
+      const isValidPassword = await UserModel.validatePassword(
+        password,
+        user.password
+      );
       if (!isValidPassword) {
         res.status(401).json({
           success: false,
-          message: 'Credenciais inválidas'
+          message: "Credenciais inválidas",
         } as ApiResponse);
         return;
       }
@@ -44,19 +53,17 @@ export class AuthController {
       const tokenPayload: AuthTokenPayload = {
         userId: user.id,
         email: user.email,
-        role: user.role
+        role: user.role,
       };
 
-      const token = jwt.sign(
-        tokenPayload,
-        process.env.JWT_SECRET!,
-        { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
-      );
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET!, {
+        expiresIn: process.env.JWT_EXPIRES_IN || "15m",
+      });
 
       const refreshToken = jwt.sign(
         tokenPayload,
         process.env.JWT_REFRESH_SECRET!,
-        { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
+        { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d" }
       );
 
       // Remove password from user object
@@ -66,20 +73,19 @@ export class AuthController {
         user: userResponse,
         token,
         refreshToken,
-        expires_in: process.env.JWT_EXPIRES_IN || '15m'
+        expires_in: process.env.JWT_EXPIRES_IN || "15m",
       };
 
       res.status(200).json({
         success: true,
-        message: 'Login realizado com sucesso',
-        data: response
+        message: "Login realizado com sucesso",
+        data: response,
       } as ApiResponse<LoginResponse>);
-
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       res.status(500).json({
         success: false,
-        message: 'Erro interno do servidor'
+        message: "Erro interno do servidor",
       } as ApiResponse);
     }
   }
@@ -87,27 +93,26 @@ export class AuthController {
   static async me(req: Request, res: Response): Promise<void> {
     try {
       const userId = (req as any).user.userId;
-      
+
       const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).json({
           success: false,
-          message: 'Usuário não encontrado'
+          message: "Usuário não encontrado",
         } as ApiResponse);
         return;
       }
 
       res.status(200).json({
         success: true,
-        message: 'Dados do usuário recuperados com sucesso',
-        data: user
+        message: "Dados do usuário recuperados com sucesso",
+        data: user,
       } as ApiResponse);
-
     } catch (error) {
-      console.error('Get user info error:', error);
+      console.error("Get user info error:", error);
       res.status(500).json({
         success: false,
-        message: 'Erro interno do servidor'
+        message: "Erro interno do servidor",
       } as ApiResponse);
     }
   }
@@ -115,12 +120,12 @@ export class AuthController {
   static async refreshToken(req: Request, res: Response): Promise<void> {
     try {
       const userId = (req as any).user.userId;
-      
+
       const user = await UserModel.findById(userId);
       if (!user) {
         res.status(404).json({
           success: false,
-          message: 'Usuário não encontrado'
+          message: "Usuário não encontrado",
         } as ApiResponse);
         return;
       }
@@ -129,29 +134,26 @@ export class AuthController {
       const tokenPayload: AuthTokenPayload = {
         userId: user.id,
         email: user.email,
-        role: user.role
+        role: user.role,
       };
 
-      const token = jwt.sign(
-        tokenPayload,
-        process.env.JWT_SECRET!,
-        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-      );
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET!, {
+        expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+      });
 
       res.status(200).json({
         success: true,
-        message: 'Token renovado com sucesso',
+        message: "Token renovado com sucesso",
         data: {
           token,
-          expires_in: process.env.JWT_EXPIRES_IN || '7d'
-        }
+          expires_in: process.env.JWT_EXPIRES_IN || "7d",
+        },
       } as ApiResponse);
-
     } catch (error) {
-      console.error('Refresh token error:', error);
+      console.error("Refresh token error:", error);
       res.status(500).json({
         success: false,
-        message: 'Erro interno do servidor'
+        message: "Erro interno do servidor",
       } as ApiResponse);
     }
   }
@@ -161,7 +163,7 @@ export class AuthController {
     // For now, we'll just return a success message
     res.status(200).json({
       success: true,
-      message: 'Logout realizado com sucesso'
+      message: "Logout realizado com sucesso",
     } as ApiResponse);
   }
 }

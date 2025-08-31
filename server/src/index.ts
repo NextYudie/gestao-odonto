@@ -10,6 +10,7 @@ import { generalRateLimit } from '@/middleware/rateLimiter';
 import authRoutes from '@/routes/auth';
 import patientRoutes from '@/routes/patients';
 import appointmentRoutes from '@/routes/appointments';
+import doctorRoutes from '@/routes/doctors';
 
 config();
 
@@ -64,6 +65,7 @@ async function startServer() {
     app.use('/api/auth', authRoutes);
     app.use('/api/patients', patientRoutes);
     app.use('/api/appointments', appointmentRoutes);
+    app.use('/api/doctors', doctorRoutes);
 
     app.use(notFoundHandler);
     app.use(errorHandler);
