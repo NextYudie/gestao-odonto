@@ -42,7 +42,7 @@ const AppointmentsTable = ({ appointments }) => {
             </tr>
           </thead>
           <tbody>
-            {appointments.map((appointment) => (
+            {appointments?.map((appointment) => (
               <tr key={appointment.id} className="border-b hover:bg-gray-50 transition-colors">
                 <td className="p-3">{appointment.patient}</td>
                 <td className="p-3">{appointment.specialty}</td>

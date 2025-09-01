@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { query, Request, Response } from 'express';
 import { AppointmentModel } from '@/models/Appointment';
 import { ApiResponse, Appointment, PaginatedResponse } from '@/types';
 import { validateAppointmentInput } from '@/utils/validation';
+import { PatientModel } from '@/models/Patient';
 
 interface AppointmentWithDetails extends Appointment {
   patient_name: string;
@@ -20,6 +21,15 @@ export class AppointmentController {
       const offset = (page - 1) * limit;
 
       const result = await AppointmentModel.findAll(limit, offset, doctorId, patientId, status, date);
+      const resultWithPatient = result.data.forEach(async(item)=>{
+        const patient= await PatientModel.findById(item.patient_id)
+        const response = {
+          ...item,
+          patient
+        }
+        return response
+      })
+      console.log (resultWithPatient)
 
       res.status(200).json({
         success: true,

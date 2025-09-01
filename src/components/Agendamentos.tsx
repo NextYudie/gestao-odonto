@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Calendar from './Calendar';
 import AppointmentsTable from './AppointmentsTable';
+import { useAppointments } from '../hooks/useAppointments';
 
 interface OutletContext {
   onNewAppointment: () => void;
@@ -11,32 +12,9 @@ const Agendamentos: React.FC = () => {
   const { onNewAppointment } = useOutletContext<OutletContext>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const appointmentsData = [
-    {
-      id: 1,
-      patient: 'Maria Silva',
-      specialty: 'Cardiologia',
-      date: '25/11/2024',
-      time: '09:00',
-      status: 'confirmed'
-    },
-    {
-      id: 2,
-      patient: 'João Santos',
-      specialty: 'Ortopedia',
-      date: '25/11/2024',
-      time: '10:15',
-      status: 'pending'
-    },
-    {
-      id: 3,
-      patient: 'Ana Costa',
-      specialty: 'Pediatria',
-      date: '25/11/2024',
-      time: '11:30',
-      status: 'confirmed'
-    }
-  ];
+  const {appointments}=useAppointments()
+  console.log(appointments)
+  
 
   return (
     <div className="p-6">
@@ -54,10 +32,10 @@ const Agendamentos: React.FC = () => {
       <Calendar
         currentMonth={currentMonth}
         setCurrentMonth={setCurrentMonth}
-        appointments={appointmentsData}
+        appointments={appointments.data}
       />
 
-      <AppointmentsTable appointments={appointmentsData} />
+      <AppointmentsTable appointments={appointments.data} />
     </div>
   );
 };
