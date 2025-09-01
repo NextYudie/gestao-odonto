@@ -1,8 +1,8 @@
 const AppointmentsTable = ({ appointments }) => {
   const getStatusColor = (status) => {
     const colors = {
-      confirmed: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
+      confirmed: 'bg-green-300 text-green-800',
+      pending: 'bg-yellow-200 text-yellow-800',
       cancelled: 'bg-red-100 text-red-800'
     };
     return colors[status] || colors.pending;
@@ -42,11 +42,12 @@ const AppointmentsTable = ({ appointments }) => {
             </tr>
           </thead>
           <tbody>
+            
             {appointments?.map((appointment) => (
               <tr key={appointment.id} className="border-b hover:bg-gray-50 transition-colors">
-                <td className="p-3">{appointment.patient}</td>
+                <td className="p-3">{appointment.patient.name}</td>
                 <td className="p-3">{appointment.specialty}</td>
-                <td className="p-3">{appointment.date} {appointment.time}</td>
+                <td className="p-3">{appointment.appointment_date} {appointment.appointment_time}</td>
                 <td className="p-3">
                   <span className={`px-2 py-1 rounded text-sm ${getStatusColor(appointment.status)}`}>
                     {getStatusText(appointment.status)}

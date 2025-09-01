@@ -21,20 +21,26 @@ export class AppointmentController {
       const offset = (page - 1) * limit;
 
       const result = await AppointmentModel.findAll(limit, offset, doctorId, patientId, status, date);
-      const resultWithPatient = result.data.forEach(async(item)=>{
-        const patient= await PatientModel.findById(item.patient_id)
-        const response = {
-          ...item,
-          patient
-        }
-        return response
-      })
-      console.log (resultWithPatient)
+      const dataWithPatient = await Promise.all(
+        result.data.map(async (item) => {
+          const patient = await PatientModel.findById(item.patient_id);
+          return {
+            ...item,
+            patient
+          };
+        })
+      );
+
+      // Manter a estrutura da paginação e substituir apenas os dados
+      const paginatedResult = {
+        ...result,
+        data: dataWithPatient
+      };
 
       res.status(200).json({
         success: true,
         message: 'Agendamentos recuperados com sucesso',
-        data: result
+        data: paginatedResult
       } as ApiResponse<PaginatedResponse<AppointmentWithDetails>>);
 
     } catch (error) {
