@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 export class UserModel {
   static async findById(id: number): Promise<UserResponse | null> {
     const query = `
-      SELECT id, name, email, role, crm, phone, created_at, updated_at
+      SELECT id, name, email, role, cro, phone, created_at, updated_at
       FROM users
       WHERE id = ?
     `;
@@ -19,7 +19,7 @@ export class UserModel {
 
   static async findAll(limit = 50, offset = 0): Promise<UserResponse[]> {
     const query = `
-      SELECT id, name, email, role, crm, phone, created_at, updated_at
+      SELECT id, name, email, role, cro, phone, created_at, updated_at
       FROM users
       ORDER BY created_at DESC
       LIMIT ? OFFSET ?
@@ -33,7 +33,7 @@ export class UserModel {
     const hashedPassword = await bcrypt.hash(userData.password, 12);
 
     const query = `
-      INSERT INTO users (name, email, password, role, crm, phone)
+      INSERT INTO users (name, email, password, role, cro, phone)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
 
@@ -42,7 +42,7 @@ export class UserModel {
       userData.email,
       hashedPassword,
       userData.role,
-      userData.crm || null,
+      userData.cro || null,
       userData.phone || null,
     ]);
 
@@ -73,9 +73,9 @@ export class UserModel {
       values.push(userData.role);
     }
 
-    if (userData.crm !== undefined) {
-      fields.push("crm = ?");
-      values.push(userData.crm);
+    if (userData.cro !== undefined) {
+      fields.push("cro = ?");
+      values.push(userData.cro);
     }
 
     if (userData.phone !== undefined) {
@@ -114,7 +114,7 @@ export class UserModel {
 
   static async findByRole(role: string): Promise<UserResponse[]> {
     const query = `
-      SELECT id, name, email, role, crm, phone, created_at, updated_at
+      SELECT id, name, email, role, cro, phone, created_at, updated_at
       FROM users
       WHERE role = ?
       ORDER BY name

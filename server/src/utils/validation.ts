@@ -133,7 +133,7 @@ export const validateUserInput = (data: any, isUpdate = false): ValidationResult
           'any.required': 'Senha é obrigatória'
         }),
     role: Joi.string().valid('admin', 'doctor', 'nurse', 'receptionist').optional().default('doctor'),
-    crm: Joi.string().max(20).optional().allow(''),
+    cro: Joi.string().max(20).optional().allow(''),
     phone: Joi.string().optional().allow('')
   });
 
@@ -159,11 +159,11 @@ export const validateDoctorInput = (data: any, isUpdate = false): ValidationResu
       'string.email': 'E-mail deve ter um formato válido'
     }),
     phone: Joi.string().optional().allow(''),
-    crm: isUpdate
+    cro: isUpdate
       ? Joi.string().max(20).optional()
       : Joi.string().max(20).required().messages({
-          'string.max': 'CRM deve ter no máximo 20 caracteres',
-          'any.required': 'CRM é obrigatório'
+          'string.max': 'CRO deve ter no máximo 20 caracteres',
+          'any.required': 'CRO é obrigatório'
         }),
     specialty: isUpdate
         ? Joi.string().max(100).optional()

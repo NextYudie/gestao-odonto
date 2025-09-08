@@ -4,7 +4,7 @@ export interface User {
   email: string;
   password: string;
   role: string;
-  crm?: string;
+  cro?: string;
   phone?: string;
   created_at: Date;
   updated_at: Date;
@@ -15,7 +15,7 @@ export interface UserResponse {
   name: string;
   email: string;
   role: string;
-  crm?: string;
+  cro?: string;
   phone?: string;
   created_at: Date;
   updated_at: Date;

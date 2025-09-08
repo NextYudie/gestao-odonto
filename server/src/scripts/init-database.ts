@@ -18,7 +18,7 @@ function initializeDatabase() {
       email: 'admin@clinica.com',
       password: adminPasswordHash,
       role: 'admin',
-      crm: '123456',
+      cro: '123456',
       phone: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -30,7 +30,7 @@ function initializeDatabase() {
       email: 'medico@clinica.com',
       password: doctorPasswordHash,
       role: 'doctor',
-      crm: '654321',
+      cro: '654321',
       phone: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()

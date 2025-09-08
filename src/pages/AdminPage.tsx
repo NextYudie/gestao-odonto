@@ -162,7 +162,7 @@ const AdminPage: React.FC = () => {
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-3">Nome</th>
-                  <th className="text-left p-3">CRM</th>
+                  <th className="text-left p-3">CRO</th>
                   <th className="text-left p-3">Especialidade</th>
                   <th className="text-left p-3">Telefone</th>
                   <th className="text-left p-3">Status</th>
@@ -183,7 +183,7 @@ const AdminPage: React.FC = () => {
                         )}
                       </div>
                     </td>
-                    <td className="p-3 font-mono text-sm">{doctor.crm}</td>
+                    <td className="p-3 font-mono text-sm">{doctor.cro}</td>
                     <td className="p-3">{doctor.specialty}</td>
                     <td className="p-3">{doctor.phone || "-"}</td>
                     <td className="p-3">

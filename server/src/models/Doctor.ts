@@ -7,9 +7,9 @@ export class DoctorModel {
     return executeQuerySingle<Doctor>(query, [id]);
   }
 
-  static async findByCrm(crm: string): Promise<Doctor | null> {
-    const query = `SELECT * FROM doctors WHERE crm = ?`;
-    return await executeQuerySingle<Doctor>(query, [crm]);
+  static async findByCro(cro: string): Promise<Doctor | null> {
+    const query = `SELECT * FROM doctors WHERE cro = ?`;
+    return await executeQuerySingle<Doctor>(query, [cro]);
   }
 
   static async findAll(
@@ -24,7 +24,7 @@ export class DoctorModel {
     const params: any[] = [];
 
     if (search) {
-      query += ` AND (name LIKE ? OR crm LIKE ? OR email LIKE ?)`;
+      query += ` AND (name LIKE ? OR cro LIKE ? OR email LIKE ?)`;
       const searchTerm = `%${search}%`;
       params.push(searchTerm, searchTerm, searchTerm);
     }
@@ -58,7 +58,7 @@ export class DoctorModel {
     doctorData: Omit<Doctor, "id" | "created_at" | "updated_at">
   ): Promise<number> {
     const query = `
-      INSERT INTO doctors (name, email, phone, crm, specialty, status)
+      INSERT INTO doctors (name, email, phone, cro, specialty, status)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
 
@@ -66,7 +66,7 @@ export class DoctorModel {
       doctorData.name,
       doctorData.email || null,
       doctorData.phone || null,
-      doctorData.crm,
+      doctorData.cro,
       doctorData.specialty,
       doctorData.status || "active",
     ]);

@@ -3,7 +3,7 @@ export interface Doctor {
     name: string;
     email: string;
     phone: string;
-    crm: string;
+    cro: string;
     specialty: string;
     status: "active" | "inactive";
     created_at: string;

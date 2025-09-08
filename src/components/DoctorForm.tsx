@@ -20,7 +20,7 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
     name: "",
     email: "",
     phone: "",
-    crm: "",
+    cro: "",
     specialty: "",
     status: "active" as "active" | "inactive",
   });
@@ -32,7 +32,7 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
         name: doctor.name || "",
         email: doctor.email || "",
         phone: doctor.phone || "",
-        crm: doctor.crm || "",
+        cro: doctor.cro || "",
         specialty: doctor.specialty || "",
         status: doctor.status || "active",
       });
@@ -46,8 +46,8 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
       newErrors.name = "Nome é obrigatório";
     }
 
-    if (!formData.crm.trim()) {
-      newErrors.crm = "CRM é obrigatório";
+    if (!formData.cro.trim()) {
+      newErrors.cro = "CRO é obrigatório";
     }
 
     if (!formData.specialty.trim()) {
@@ -122,20 +122,20 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                CRM *
+                CRO *
               </label>
               <input
                 type="text"
-                name="crm"
-                value={formData.crm}
+                name="cro"
+                value={formData.cro}
                 onChange={handleInputChange}
                 className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.crm ? "border-red-500" : "border-gray-300"
+                  errors.cro ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="000000-SP"
               />
-              {errors.crm && (
-                <p className="text-red-500 text-sm mt-1">{errors.crm}</p>
+              {errors.cro && (
+                <p className="text-red-500 text-sm mt-1">{errors.cro}</p>
               )}
             </div>
 

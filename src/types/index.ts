@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   role: string;
-  crm?: string;
+  cro?: string;
   phone?: string;
   avatar?: string;
   password?: string;
@@ -47,7 +47,7 @@ export interface Doctor {
   name: string;
   email: string;
   phone: string;
-  crm: string;
+  cro: string;
   specialty: string;
   status: "active" | "inactive";
   created_at: string;

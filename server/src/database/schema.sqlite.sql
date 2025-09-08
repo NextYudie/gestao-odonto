@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   role TEXT CHECK(role IN ('admin', 'doctor', 'nurse', 'receptionist')) DEFAULT 'doctor',
-  crm TEXT,
+  cro TEXT,
   phone TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -129,7 +129,7 @@ CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id,
 CREATE INDEX IF NOT EXISTS idx_notifications_created ON notifications(created_at);
 
 -- Insert default users (password is 'admin123')
-INSERT OR IGNORE INTO users (id, name, email, password, role, crm) VALUES 
+INSERT OR IGNORE INTO users (id, name, email, password, role, cro) VALUES 
 (1, 'Dr. Silva', 'admin@clinica.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj.5g8kFDYMa', 'admin', '123456'),
 (2, 'Dra. Santos', 'medico@clinica.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj.5g8kFDYMa', 'doctor', '654321');
 

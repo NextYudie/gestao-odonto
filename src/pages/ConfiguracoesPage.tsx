@@ -86,7 +86,7 @@ const ConfiguracoesPage: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-700 mb-2">CRM</label>
+                      <label className="block text-gray-700 mb-2">CRO</label>
                       <input
                         type="text"
                         placeholder="123456"

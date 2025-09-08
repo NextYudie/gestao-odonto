@@ -6,7 +6,7 @@
       "email": "medico@clinica.com",
       "password": "$2a$12$hRk9HaF45m/J/VZ3bL5xouGH3SsNea1OZGap0kSUvQ/yH6r0BWvfK",
       "role": "Clínica Geral",
-      "crm": "654321",
+      "cro": "654321",
       "phone": null,
       "created_at": "2025-08-23T07:34:44.402Z",
       "updated_at": "2025-08-23T07:34:44.402Z"
@@ -17,7 +17,7 @@
       "email": "admin@clinica.com",
       "password": "$2a$12$I90qHHMQ9Qcx5H5toVWS9.v6ZiETfiHhGK9VgdlYPN2E7ivSvTX1e",
       "role": "admin",
-      "crm": "123456",
+      "cro": "123456",
       "phone": null,
       "created_at": "2025-08-23T07:34:44.402Z",
       "updated_at": "2025-08-23T07:34:44.402Z"
@@ -128,7 +128,7 @@
       "name": "Dr. House",
       "email": "house@email.com",
       "phone": "(11) 99999-1111",
-      "crm": "123456-SP",
+      "cro": "123456-SP",
       "specialty": "Clinico Geral",
       "status": "active",
       "created_at": "2025-08-23T07:34:44.402Z",
@@ -139,7 +139,7 @@
       "name": "Teste completo",
       "email": "Teste completo",
       "phone": "teste@gmail.com",
-      "crm": "3423234",
+      "cro": "3423234",
       "specialty": "213445656",
       "status": "Dentes2"
     },
@@ -148,7 +148,7 @@
       "name": "Teste2",
       "email": "Teste2",
       "phone": "teste@gmail.com",
-      "crm": "2131141556",
+      "cro": "2131141556",
       "specialty": "58985445-PR",
       "status": "Dente3"
     },
@@ -157,7 +157,7 @@
       "name": "Teste2",
       "email": "Teste2",
       "phone": "teste@gmail.com",
-      "crm": "2131141556",
+      "cro": "2131141556",
       "specialty": "58985445-PR",
       "status": "Dente3"
     },
@@ -166,7 +166,7 @@
       "name": "Teste4",
       "email": "Teste4",
       "phone": "teste@gmail.com",
-      "crm": "32343434",
+      "cro": "32343434",
       "specialty": "21312312",
       "status": "especialidade"
     },
@@ -175,7 +175,7 @@
       "name": "Teste4",
       "email": "Teste4",
       "phone": "teste@gmail.com",
-      "crm": "32343434",
+      "cro": "32343434",
       "specialty": "21312312",
       "status": "especialidade"
     },
@@ -184,7 +184,7 @@
       "name": "Raldo lukas",
       "email": "Raldo lukas",
       "phone": "raldo@fire.com",
-      "crm": "123213123125",
+      "cro": "123213123125",
       "specialty": "123123556",
       "status": "senor de la noche"
     },
@@ -193,7 +193,7 @@
       "name": "Isadora Helena",
       "email": "Isadora Helena",
       "phone": "isadora.helena@hotmail.com",
-      "crm": "151232131231",
+      "cro": "151232131231",
       "specialty": "1231245555",
       "status": "Clinica geral"
     }

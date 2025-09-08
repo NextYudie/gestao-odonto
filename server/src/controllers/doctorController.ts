@@ -77,12 +77,12 @@ export class DoctorController {
         return;
       }
 
-      // // Check if CRM already exists
-      // const existingDoctor = await DoctorModel.findByCrm(doctorData.crm);
+      // // Check if CRO already exists
+      // const existingDoctor = await DoctorModel.findByCro(doctorData.cro);
       // if (existingDoctor) {
       //   res.status(409).json({
       //     success: false,
-      //     message: 'Médico com este CRM já existe'
+      //     message: 'Médico com este CRO já existe'
       //   } as ApiResponse);
       //   return;
       // }
@@ -138,13 +138,13 @@ export class DoctorController {
         return;
       }
 
-      // Check CRM uniqueness if it's being updated
-      if (doctorData.crm && doctorData.crm !== existingDoctor.crm) {
-        const crmExists = await DoctorModel.findByCrm(doctorData.crm);
-        if (crmExists) {
+      // Check CRO uniqueness if it's being updated
+      if (doctorData.cro && doctorData.cro !== existingDoctor.cro) {
+        const croExists = await DoctorModel.findByCro(doctorData.cro);
+        if (croExists) {
           res.status(409).json({
             success: false,
-            message: "CRM já está em uso por outro médico",
+            message: "CRO já está em uso por outro médico",
           } as ApiResponse);
           return;
         }

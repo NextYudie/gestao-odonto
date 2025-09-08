@@ -9,7 +9,7 @@ CREATE TABLE users (
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   role ENUM('admin', 'doctor', 'nurse', 'receptionist') DEFAULT 'doctor',
-  crm VARCHAR(20) NULL,
+  cro VARCHAR(20) NULL,
   phone VARCHAR(20) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -101,7 +101,7 @@ CREATE TABLE notifications (
 );
 
 -- Insert default admin user
-INSERT INTO users (name, email, password, role, crm) VALUES 
+INSERT INTO users (name, email, password, role, cro) VALUES 
 ('Dr. Silva', 'admin@clinica.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj.5g8kFDYMa', 'admin', '123456'),
 ('Dra. Santos', 'medico@clinica.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj.5g8kFDYMa', 'doctor', '654321');
 
