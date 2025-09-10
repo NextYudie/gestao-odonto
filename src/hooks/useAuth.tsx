@@ -30,13 +30,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
 
-      if (token) {
+      if (storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error("Erro ao parsear dados do usuário:", error);
+          localStorage.removeItem("user");
+        }
+      } else if (token) {
         try {
           const response = await apiService.getMe();
           if (response.success && response.data) {
             setUser(response.data);
             setIsAuthenticated(true);
+            localStorage.setItem("user", JSON.stringify(response.data));
           } else {
             localStorage.removeItem("token");
             localStorage.removeItem("refreshToken");
