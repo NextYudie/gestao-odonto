@@ -1,48 +1,45 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import OdontogramChart from './OdontogramChart';
+import ToothStatusPopover from './ToothStatusPopover';
 
 const OdontogramModal = ({ isOpen, onClose, onSubmit, patientId }) => {
-  const [formData, setFormData] = useState({
-    patient_id: patientId,
-    chart_type: 'inicial', // Default to 'inicial'
-    chart_data: '{}', // Default to empty JSON object string
-  });
+  const [chartData, setChartData] = useState({});
+  const [selectedTooth, setSelectedTooth] = useState<{ toothNumber: number, section: string } | null>(null);
+  const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        patient_id: patientId,
-        chart_type: 'inicial',
-        chart_data: '{}',
-      });
+      setChartData({});
+      setSelectedTooth(null);
     }
-  }, [isOpen, patientId]);
+  }, [isOpen]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const handleToothClick = (toothNumber: number, section: string, event: React.MouseEvent) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setSelectedTooth({ toothNumber, section });
+    setPopoverPosition({ x: rect.left + window.scrollX, y: rect.bottom + window.scrollY });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    let chart_data = {};
-    if (formData.chart_data) {
-        try {
-            chart_data = JSON.parse(formData.chart_data);
-        } catch (error) {
-            alert('Formato de JSON inválido para Dados do Odontograma.');
-            return;
-        }
+  const handleStatusSelect = (status: string) => {
+    if (selectedTooth) {
+      setChartData(prev => ({
+        ...prev,
+        [selectedTooth.toothNumber]: {
+          ...prev[selectedTooth.toothNumber],
+          [selectedTooth.section]: status,
+        },
+      }));
     }
+    setSelectedTooth(null);
+  };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     const dataToSubmit = {
-        ...formData,
-        chart_data,
+      patient_id: patientId,
+      chart_type: 'inicial',
+      chart_data: chartData,
     };
-
     onSubmit(dataToSubmit);
   };
 
@@ -50,7 +47,7 @@ const OdontogramModal = ({ isOpen, onClose, onSubmit, patientId }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg w-full max-w-md mx-auto p-6">
+      <div className="bg-white rounded-lg w-full max-w-full h-full overflow-auto mx-auto p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Novo Odontograma</h2>
           <button
@@ -63,29 +60,18 @@ const OdontogramModal = ({ isOpen, onClose, onSubmit, patientId }) => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Tipo de Odontograma</label>
-            <select
-              name="chart_type"
-              value={formData.chart_type}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="inicial">Inicial</option>
-              <option value="plano_tratamento">Plano de Tratamento</option>
-            </select>
+            <OdontogramChart chartData={chartData} onToothClick={handleToothClick} selectedTooth={selectedTooth} />
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Dados do Odontograma (JSON)</label>
-            <textarea
-              name="chart_data"
-              value={formData.chart_data}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows="10"
-              placeholder='{"18": {"status": "hígido"}, "17": {"status": "extraído"}}'
+          {selectedTooth && (
+            <ToothStatusPopover
+              position={popoverPosition}
+              onSelect={handleStatusSelect}
+              onClose={() => setSelectedTooth(null)}
+              toothNumber={selectedTooth.toothNumber}
+              section={selectedTooth.section}
             />
-          </div>
+          )}
 
           <div className="flex justify-end space-x-3">
             <button
@@ -97,7 +83,7 @@ const OdontogramModal = ({ isOpen, onClose, onSubmit, patientId }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-amber-600 transition-colors"
+              className="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors"
             >
               Salvar
             </button>
@@ -109,4 +95,3 @@ const OdontogramModal = ({ isOpen, onClose, onSubmit, patientId }) => {
 };
 
 export default OdontogramModal;
-

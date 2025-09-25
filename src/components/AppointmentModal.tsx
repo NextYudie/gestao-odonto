@@ -171,4 +171,4 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
   );
 };
 
-export default AppointmentModal;al;
+export default AppointmentModal;

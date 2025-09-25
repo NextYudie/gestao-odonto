@@ -1,14 +1,25 @@
 import { executeQuery, executeQuerySingle } from '@/config/database';
 import { Anamnese } from '@/types';
 
+const parseJsonString = (value: any) => {
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      return value; // Return original string if parsing fails
+    }
+  }
+  return value;
+};
+
 export class AnamneseModel {
   static async findByPatientId(patientId: number): Promise<Anamnese[]> {
     const query = `SELECT * FROM anamneses WHERE patient_id = ? ORDER BY created_at DESC`;
     const anamneses = await executeQuery<Anamnese>(query, [patientId]);
     return anamneses.map(a => ({
       ...a,
-      allergies: typeof a.allergies === 'string' ? JSON.parse(a.allergies) : a.allergies,
-      systemic_diseases: typeof a.systemic_diseases === 'string' ? JSON.parse(a.systemic_diseases) : a.systemic_diseases,
+      allergies: parseJsonString(a.allergies),
+      systemic_diseases: parseJsonString(a.systemic_diseases),
     }));
   }
 
@@ -18,8 +29,8 @@ export class AnamneseModel {
     if (anamnese) {
       return {
         ...anamnese,
-        allergies: typeof anamnese.allergies === 'string' ? JSON.parse(anamnese.allergies) : anamnese.allergies,
-        systemic_diseases: typeof anamnese.systemic_diseases === 'string' ? JSON.parse(anamnese.systemic_diseases) : anamnese.systemic_diseases,
+        allergies: parseJsonString(anamnese.allergies),
+        systemic_diseases: parseJsonString(anamnese.systemic_diseases),
       };
     }
     return null;

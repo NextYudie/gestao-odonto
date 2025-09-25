@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiService from '@/services/api';
 import { format } from 'date-fns';
 import AnamneseModal from '@/components/AnamneseModal';
+import OdontogramModal from '@/components/OdontogramModal';
 import OdontogramChart from '@/components/OdontogramChart'; // Import OdontogramChart
 
 interface Patient {
@@ -46,7 +47,8 @@ const ProntuariosPage: React.FC = () => {
   const [odontograms, setOdontograms] = useState<Odontogram[]>([]); // New state for odontograms
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAnamneseModalOpen, setIsAnamneseModalOpen] = useState(false);
+  const [isOdontogramModalOpen, setIsOdontogramModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('anamneses'); // New state for active tab
 
   useEffect(() => {
@@ -107,14 +109,24 @@ const ProntuariosPage: React.FC = () => {
     }
   };
 
-  const handleModalOpen = () => {
+  const handleAnamneseModalOpen = () => {
     if (selectedPatient) {
-      setIsModalOpen(true);
+      setIsAnamneseModalOpen(true);
     }
   };
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
+  const handleAnamneseModalClose = () => {
+    setIsAnamneseModalOpen(false);
+  };
+
+  const handleOdontogramModalOpen = () => {
+    if (selectedPatient) {
+      setIsOdontogramModalOpen(true);
+    }
+  };
+
+  const handleOdontogramModalClose = () => {
+    setIsOdontogramModalOpen(false);
   };
 
   const handleAnamneseSubmit = async (anamneseData: any) => {
@@ -123,7 +135,7 @@ const ProntuariosPage: React.FC = () => {
     try {
       const response = await apiService.createAnamnese(anamneseData);
       if (response.success) {
-        handleModalClose();
+        handleAnamneseModalClose();
         fetchAnamneses(selectedPatient.id);
       } else {
         alert(`Erro ao criar anamnese: ${response.message}`);
@@ -139,7 +151,7 @@ const ProntuariosPage: React.FC = () => {
     try {
       const response = await apiService.createOdontogram(odontogramData);
       if (response.success) {
-        handleModalClose(); // Assuming a modal will be used for odontogram creation
+        handleOdontogramModalClose();
         fetchOdontograms(selectedPatient.id);
       } else {
         alert(`Erro ao criar odontograma: ${response.message}`);
@@ -195,12 +207,6 @@ const ProntuariosPage: React.FC = () => {
                   <p className="text-gray-600">Nascimento: {format(new Date(selectedPatient.birth_date), 'dd/MM/yyyy')}</p>
                   <p className="text-gray-600">CPF: {selectedPatient.cpf}</p>
                 </div>
-                <button 
-                  onClick={handleModalOpen}
-                  className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600"
-                >
-                  Nova Anamnese
-                </button>
               </div>
 
               {/* Tabs */}
@@ -233,7 +239,15 @@ const ProntuariosPage: React.FC = () => {
               <div>
                 {activeTab === 'anamneses' && (
                   <>
-                    <h3 className="text-xl font-bold text-gray-800 mt-6 mb-4">Histórico de Anamneses</h3>
+                    <div className="flex justify-between items-center mt-6 mb-4">
+                      <h3 className="text-xl font-bold text-gray-800">Histórico de Anamneses</h3>
+                      <button 
+                        onClick={handleAnamneseModalOpen}
+                        className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600"
+                      >
+                        Nova Anamnese
+                      </button>
+                    </div>
                     <div className="space-y-4">
                       {anamneses.length > 0 ? (
                         anamneses.map((anamnese) => (
@@ -281,7 +295,7 @@ const ProntuariosPage: React.FC = () => {
                     <div className="flex justify-between items-center mt-6 mb-4">
                       <h3 className="text-xl font-bold text-gray-800">Histórico de Odontogramas</h3>
                       <button 
-                        onClick={() => alert('Implementar modal para novo odontograma')} // Placeholder for new odontogram modal
+                        onClick={handleOdontogramModalOpen}
                         className="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600"
                       >
                         Novo Odontograma
@@ -311,11 +325,20 @@ const ProntuariosPage: React.FC = () => {
         </div>
       </div>
 
-      {isModalOpen && selectedPatient && (
+      {isAnamneseModalOpen && selectedPatient && (
         <AnamneseModal
-          isOpen={isModalOpen}
-          onClose={handleModalClose}
+          isOpen={isAnamneseModalOpen}
+          onClose={handleAnamneseModalClose}
           onSubmit={handleAnamneseSubmit}
+          patientId={selectedPatient.id}
+        />
+      )}
+
+      {isOdontogramModalOpen && selectedPatient && (
+        <OdontogramModal
+          isOpen={isOdontogramModalOpen}
+          onClose={handleOdontogramModalClose}
+          onSubmit={handleOdontogramSubmit}
           patientId={selectedPatient.id}
         />
       )}

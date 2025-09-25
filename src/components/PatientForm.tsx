@@ -308,4 +308,3 @@ const PatientForm: React.FC<PatientFormProps> = ({
 };
 
 export default PatientForm;
-ntForm;

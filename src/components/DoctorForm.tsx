@@ -240,4 +240,3 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
 };
 
 export default DoctorForm;
-orm;
