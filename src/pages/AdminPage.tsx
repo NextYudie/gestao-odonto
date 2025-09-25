@@ -150,7 +150,7 @@ const AdminPage: React.FC = () => {
             {!searchTerm && (
               <button
                 onClick={handleCreateDoctor}
-                className="mt-4 text-blue-600 hover:text-blue-800"
+                className="mt-4 text-blue-600 hover:text-amber-800"
               >
                 Cadastrar primeiro médico
               </button>
@@ -205,7 +205,7 @@ const AdminPage: React.FC = () => {
                         <button
                           onClick={() => handleEditDoctor(doctor)}
                           disabled={actionLoading}
-                          className="text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                          className="text-blue-600 hover:text-amber-800 disabled:opacity-50"
                           title="Editar médico"
                         >
                           <i className="fas fa-edit"></i>
@@ -241,3 +241,4 @@ const AdminPage: React.FC = () => {
 };
 
 export default AdminPage;
+

@@ -7,6 +7,8 @@ interface Database {
   appointments: any[];
   medical_records: any[];
   notifications: any[];
+  anamneses: any[];
+  odontograms: any[];
 }
 
 let db: Database | null = null;
@@ -28,6 +30,11 @@ export const createConnection = (): Database => {
     if (fs.existsSync(dbPath)) {
       const data = fs.readFileSync(dbPath, "utf8");
       db = JSON.parse(data);
+      // Ensure anamneses property exists
+      if (!db.anamneses) {
+        db.anamneses = [];
+        saveDatabase(); // Save the updated structure
+      }
     } else {
       db = {
         users: [],
@@ -35,6 +42,8 @@ export const createConnection = (): Database => {
         appointments: [],
         medical_records: [],
         notifications: [],
+        anamneses: [],
+        odontograms: [],
       };
       saveDatabase();
     }
@@ -106,30 +115,22 @@ export const executeQuery = <T = any>(
 
       return records as T[];
     } else if (trimmedQuery.startsWith("INSERT")) {
-      const tableMatch = query.match(/INSERT\s+INTO\s+(\w+)/i);
-      if (!tableMatch || !tableMatch[1]) return [];
+      const tableMatch = query.match(/INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)/i); // Match table and columns
+      if (!tableMatch || !tableMatch[1] || !tableMatch[2]) return [];
 
       const tableName = tableMatch[1].toLowerCase();
-      const valuesMatch = query.match(/VALUES\s*\(([^)]+)\)/i);
+      const columns = tableMatch[2].split(",").map((c) => c.trim());
 
-      if (valuesMatch) {
-        const newRecord: any = { id: generateId(tableName) };
-        const columnMatch = query.match(/\(([^)]+)\)/);
+      const newRecord: any = { id: generateId(tableName) };
 
-        if (columnMatch && columnMatch[1]) {
-          const columns = columnMatch[1].split(",").map((c) => c.trim());
-          columns.forEach((col, index) => {
-            if (col !== "id") {
-              newRecord[col] = params[index - 1] || params[index];
-            }
-          });
-        }
+      columns.forEach((col, index) => {
+        newRecord[col] = params[index]; // Directly map parameter to column
+      });
 
-        (db as any)[tableName].push(newRecord);
-        saveDatabase();
+      (db as any)[tableName].push(newRecord);
+      saveDatabase();
 
-        return [{ lastID: newRecord.id, changes: 1 } as any];
-      }
+      return [{ lastID: newRecord.id, changes: 1 } as any];
     } else if (trimmedQuery.startsWith("UPDATE")) {
       const tableMatch = query.match(/UPDATE\s+(\w+)/i);
       if (!tableMatch || !tableMatch[1]) return [];

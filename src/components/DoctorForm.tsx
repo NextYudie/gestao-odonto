@@ -219,7 +219,7 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50"
             >
               {loading ? (
                 <div className="flex items-center">
@@ -240,3 +240,4 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
 };
 
 export default DoctorForm;
+orm;

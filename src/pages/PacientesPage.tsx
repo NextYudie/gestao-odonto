@@ -111,7 +111,7 @@ const PacientesPage: React.FC = () => {
     return (
       <div className="p-6 flex justify-center items-center">
         <div className="flex items-center">
-          <i className="fas fa-spinner fa-spin text-2xl text-blue-600 mr-3"></i>
+          <i className="fas fa-spinner fa-spin text-2xl text-amber-600 mr-3"></i>
           <span className="text-lg">Carregando pacientes...</span>
         </div>
       </div>
@@ -145,14 +145,14 @@ const PacientesPage: React.FC = () => {
                 placeholder="Buscar paciente..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-64"
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent w-full sm:w-64"
               />
               <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
 
             <button
               onClick={handleCreatePatient}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center whitespace-nowrap"
+              className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition-colors flex items-center justify-center whitespace-nowrap"
             >
               <i className="fas fa-plus mr-2"></i>
               Novo Paciente
@@ -171,7 +171,7 @@ const PacientesPage: React.FC = () => {
             {!searchTerm && (
               <button
                 onClick={handleCreatePatient}
-                className="mt-4 text-blue-600 hover:text-blue-800"
+                className="mt-4 text-amber-600 hover:text-amber-800"
               >
                 Cadastrar primeiro paciente
               </button>
@@ -228,7 +228,7 @@ const PacientesPage: React.FC = () => {
                         <button
                           onClick={() => handleEditPatient(patient)}
                           disabled={actionLoading}
-                          className="text-blue-600 hover:text-blue-800 disabled:opacity-50"
+                          className="text-amber-600 hover:text-amber-800 disabled:opacity-50"
                           title="Editar paciente"
                         >
                           <i className="fas fa-edit"></i>

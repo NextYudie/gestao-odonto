@@ -36,11 +36,20 @@ export interface Patient {
   cpf: string;
   address?: string;
   emergency_contact?: string;
-  medical_history?: string;
   status: 'active' | 'inactive';
   created_at?: string;
   updated_at?: string;
 }
+
+export interface Odontogram {
+  id: number;
+  patient_id: number;
+  chart_data: any; // JSON type in DB, so 'any' for flexibility
+  chart_type: 'inicial' | 'plano_tratamento';
+  created_at: string; // Date in backend, string when fetched
+}
+
+
 
 export interface Doctor {
   id: number;
@@ -73,7 +82,7 @@ export interface StatCard {
   title: string;
   value: string;
   icon: string;
-  color: 'blue' | 'green' | 'purple' | 'yellow' | 'red';
+  color: 'blue' | 'green' | 'purple' | 'yellow' | 'red' | 'amber';
 }
 
 export interface AuthContextType {

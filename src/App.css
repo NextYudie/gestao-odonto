@@ -1,6 +1,6 @@
 :root {
-  --primary: #2563eb;
-  --secondary: #0ea5e9;
+  --primary: #FBBF24;
+  --secondary: #FDE68A;
   --accent: #10b981;
   --danger: #ef4444;
   --warning: #f59e0b;
@@ -13,7 +13,7 @@ body {
 }
 
 .sidebar {
-  background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%);
+  background: linear-gradient(180deg, #F59E0B 0%, #FBBF24 100%);
   transition: all 0.3s ease;
 }
 
@@ -84,7 +84,7 @@ body {
 }
 
 .calendar-day:hover {
-  background-color: #dbeafe;
+  background-color: #FEF3C7;
   transform: scale(1.05);
 }
 

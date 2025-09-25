@@ -9,7 +9,7 @@ const LoadingSpinner: React.FC = () => {
         </div>
         
         <div className="relative">
-          <div className="w-12 h-12 mx-auto border-4 border-blue-200 rounded-full animate-spin border-t-blue-600"></div>
+          <div className="w-12 h-12 mx-auto border-4 border-blue-200 rounded-full animate-spin border-t-amber-600"></div>
         </div>
         
         <p className="text-gray-600 mt-4 font-medium">Carregando sistema...</p>
@@ -19,4 +19,4 @@ const LoadingSpinner: React.FC = () => {
   );
 };
 
-export default LoadingSpinner;
+export default LoadingSpinner;;

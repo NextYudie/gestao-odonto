@@ -68,7 +68,7 @@ const RelatoriosPage: React.FC = () => {
             </div>
             <div className="flex justify-between items-center p-3 bg-blue-50 rounded border-l-4 border-blue-500">
               <span className="font-medium">Lucro Líquido</span>
-              <span className="font-bold text-blue-600">R$ 32.780,00</span>
+              <span className="font-bold text-amber-600">R$ 32.780,00</span>
             </div>
           </div>
         </div>
@@ -78,7 +78,7 @@ const RelatoriosPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-3">Taxa de Ocupação</h3>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">75%</div>
+            <div className="text-3xl font-bold text-amber-600 mb-2">75%</div>
             <p className="text-sm text-gray-600">Média do período</p>
           </div>
         </div>

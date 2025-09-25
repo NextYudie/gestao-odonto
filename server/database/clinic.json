@@ -197,5 +197,28 @@
       "specialty": "1231245555",
       "status": "Clinica geral"
     }
+  ],
+  "anamneses": [
+    {
+      "id": 1,
+      "patient_id": 1,
+      "chief_complaint": 1,
+      "history_of_present_illness": "sahur",
+      "allergies": "sahur",
+      "systemic_diseases": "[\"Penicilina\"]",
+      "medications_in_use": "[\"Diabetes Tipo 1\"]",
+      "oral_hygiene_habits": "sahur"
+    },
+    {
+      "id": 2,
+      "patient_id": 2,
+      "chief_complaint": "flamengo",
+      "history_of_present_illness": "palmeiras",
+      "allergies": "Aspirina",
+      "systemic_diseases": "Diabetes Tipo 1",
+      "medications_in_use": "sahur",
+      "oral_hygiene_habits": "tometome",
+      "created_at": "2025-09-16T13:24:23.637Z"
+    }
   ]
 }

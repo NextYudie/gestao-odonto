@@ -30,10 +30,30 @@ export interface Patient {
   cpf: string;
   address?: string;
   emergency_contact?: string;
-  medical_history?: string;
   status: 'active' | 'inactive';
   created_at: Date;
   updated_at: Date;
+}
+
+export interface Anamnese {
+  id: number;
+  patient_id: number;
+  chief_complaint?: string;
+  history_of_present_illness?: string;
+  family_disease_history?: string;
+  allergies?: string[];
+  systemic_diseases?: string[];
+  medications_in_use?: string;
+  oral_hygiene_habits?: string;
+  created_at: Date;
+}
+
+export interface Odontogram {
+  id: number;
+  patient_id: number;
+  chart_data: any; // JSON type in DB, so 'any' for flexibility
+  chart_type: 'inicial' | 'plano_tratamento';
+  created_at: Date;
 }
 
 export interface Appointment {

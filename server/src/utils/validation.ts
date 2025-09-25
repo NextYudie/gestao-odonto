@@ -53,7 +53,6 @@ export const validatePatientInput = (data: any, isUpdate = false): ValidationRes
         }),
     address: Joi.string().optional().allow(''),
     emergency_contact: Joi.string().optional().allow(''),
-    medical_history: Joi.string().optional().allow(''),
     status: Joi.string().valid('active', 'inactive').optional()
   });
 
@@ -172,6 +171,57 @@ export const validateDoctorInput = (data: any, isUpdate = false): ValidationResu
             'any.required': 'Especialidade é obrigatória'
             }),
     status: Joi.string().valid('active', 'inactive').optional()
+  });
+
+  const { error } = schema.validate(data);
+  
+  return {
+    isValid: !error,
+    errors: error ? error.details.map(detail => detail.message) : []
+  };
+};
+
+// Anamnese validation
+export const validateAnamneseInput = (data: any, isUpdate = false): ValidationResult => {
+  const schema = Joi.object({
+    patient_id: isUpdate
+      ? Joi.number().integer().positive().optional()
+      : Joi.number().integer().positive().required().messages({
+          'number.positive': 'ID do paciente deve ser positivo',
+          'any.required': 'ID do paciente é obrigatório'
+        }),
+    chief_complaint: Joi.string().optional().allow(''),
+    history_of_present_illness: Joi.string().optional().allow(''),
+    allergies: Joi.any().optional(),
+    systemic_diseases: Joi.any().optional(),
+    medications_in_use: Joi.string().optional().allow(''),
+    oral_hygiene_habits: Joi.string().optional().allow(''),
+  });
+
+  const { error } = schema.validate(data);
+  
+  return {
+    isValid: !error,
+    errors: error ? error.details.map(detail => detail.message) : []
+  };
+};
+
+// Odontogram validation
+export const validateOdontogramInput = (data: any, isUpdate = false): ValidationResult => {
+  const schema = Joi.object({
+    patient_id: isUpdate
+      ? Joi.number().integer().positive().optional()
+      : Joi.number().integer().positive().required().messages({
+          'number.positive': 'ID do paciente deve ser positivo',
+          'any.required': 'ID do paciente é obrigatório'
+        }),
+    chart_data: Joi.object().optional(), // Allow any object for chart_data
+    chart_type: isUpdate
+      ? Joi.string().valid('inicial', 'plano_tratamento').optional()
+      : Joi.string().valid('inicial', 'plano_tratamento').required().messages({
+          'any.only': 'Tipo de prontuário inválido. Use "inicial" ou "plano_tratamento"',
+          'any.required': 'Tipo de prontuário é obrigatório'
+        }),
   });
 
   const { error } = schema.validate(data);

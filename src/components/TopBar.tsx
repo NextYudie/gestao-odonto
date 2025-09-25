@@ -64,7 +64,7 @@ const TopBar: React.FC<TopBarProps> = ({ notificationCount, user }) => {
 
   return (
     <header className="bg-white shadow-sm p-4 flex justify-between items-center">
-      <button className="md:hidden text-blue-600">
+      <button className="md:hidden text-amber-600">
         <i className="fas fa-bars text-xl"></i>
       </button>
 
@@ -83,7 +83,7 @@ const TopBar: React.FC<TopBarProps> = ({ notificationCount, user }) => {
         <div className="relative" ref={notificationRef}>
           <button
             onClick={toggleNotifications}
-            className="p-2 text-gray-600 hover:text-blue-600 relative"
+            className="p-2 text-gray-600 hover:text-amber-600 relative"
           >
             <i className="fas fa-bell text-xl"></i>
             {notificationCount > 0 && (
@@ -127,3 +127,4 @@ const TopBar: React.FC<TopBarProps> = ({ notificationCount, user }) => {
 };
 
 export default TopBar;
+

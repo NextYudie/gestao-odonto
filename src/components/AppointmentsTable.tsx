@@ -56,7 +56,7 @@ const AppointmentsTable = ({ appointments }) => {
                 <td className="p-3">
                   <button
                     onClick={() => handleEdit(appointment.id)}
-                    className="text-blue-600 hover:text-blue-800 mr-2 transition-colors"
+                    className="text-amber-600 hover:text-amber-800 mr-2 transition-colors"
                     title="Editar"
                   >
                     <i className="fas fa-edit"></i>

@@ -24,7 +24,7 @@ const Layout: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-amber-50 to-amber-100">
       <Sidebar user={user} />
 
       <div className="flex-1">

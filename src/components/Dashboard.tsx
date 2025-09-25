@@ -15,7 +15,7 @@ const Dashboard = () => {
       title: 'Consultas Hoje',
       value: '0',
       icon: 'fas fa-calendar-check',
-      color: 'blue'
+      color: 'amber'
     },
     {
       title: 'Pacientes Ativos',
@@ -51,7 +51,7 @@ const Dashboard = () => {
               title: 'Consultas Hoje',
               value: appointmentsStats.data?.today?.toString() || '0',
               icon: 'fas fa-calendar-check',
-              color: 'blue'
+              color: 'amber'
             },
             {
               title: 'Pacientes Ativos',

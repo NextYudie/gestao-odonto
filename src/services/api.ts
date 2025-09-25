@@ -1,4 +1,4 @@
-import type { Appointment, Patient, User, Doctor } from "../types";
+import type { Anamnese, Appointment, Patient, User, Doctor, PaginatedResponse, Odontogram } from "../types";
 
 const API_BASE_URL = "http://localhost:3001/api";
 
@@ -96,7 +96,7 @@ class ApiService {
   }
 
   // Patients
-  async getPatients(): Promise<ApiResponse<Patient[]>> {
+  async getPatients(): Promise<ApiResponse<PaginatedResponse<Patient>>> {
     const response = await fetch(`${API_BASE_URL}/patients`, {
       headers: this.getAuthHeaders(),
     });
@@ -297,6 +297,63 @@ class ApiService {
 
   async deleteDoctor(id: number): Promise<ApiResponse> {
     const response = await fetch(`${API_BASE_URL}/doctors/${id}`, {
+      method: "DELETE",
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse>(response);
+  }
+
+  // Anamneses
+  async getAnamnesesByPatient(patientId: number): Promise<ApiResponse<any[]>> {
+    const response = await fetch(`${API_BASE_URL}/anamneses/patient/${patientId}`, {
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse<Anamnese[]>>(response);
+  }
+
+  async createAnamnese(anamnese: any): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_BASE_URL}/anamneses`, {
+      method: "POST",
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(anamnese),
+    });
+
+    return this.handleResponse<ApiResponse<any>>(response);
+  }
+
+  // Odontograms
+  async getOdontogramsByPatient(patientId: number): Promise<ApiResponse<Odontogram[]>> {
+    const response = await fetch(`${API_BASE_URL}/odontograms/patient/${patientId}`, {
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse<Odontogram[]>>(response);
+  }
+
+  async createOdontogram(odontogram: Omit<Odontogram, 'id' | 'created_at'>): Promise<ApiResponse<Odontogram>> {
+    const response = await fetch(`${API_BASE_URL}/odontograms`, {
+      method: "POST",
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(odontogram),
+    });
+
+    return this.handleResponse<ApiResponse<Odontogram>>(response);
+  }
+
+  async updateOdontogram(id: number, odontogram: Partial<Omit<Odontogram, 'id' | 'patient_id' | 'created_at'>>): Promise<ApiResponse<Odontogram>> {
+    const response = await fetch(`${API_BASE_URL}/odontograms/${id}`, {
+      method: "PUT",
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(odontogram),
+    });
+
+    return this.handleResponse<ApiResponse<Odontogram>>(response);
+  }
+
+  async deleteOdontogram(id: number): Promise<ApiResponse> {
+    const response = await fetch(`${API_BASE_URL}/odontograms/${id}`, {
       method: "DELETE",
       headers: this.getAuthHeaders(),
     });

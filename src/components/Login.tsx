@@ -51,12 +51,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-amber-100 to-amber-200 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo e Header */}
         <div className="text-center mb-8">
           <div className="bg-white rounded-full w-20 h-20 mx-auto flex items-center justify-center shadow-lg mb-4">
-            <i className="fas fa-heartbeat text-3xl text-blue-600"></i>
+            <i className="fas fa-heartbeat text-3xl text-amber-600"></i>
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Clínica Saúde Total
@@ -94,7 +94,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="digite@seu.email"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                 disabled={loading}
               />
             </div>
@@ -110,7 +110,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="••••••••"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                 disabled={loading}
               />
             </div>
@@ -122,7 +122,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   name="rememberMe"
                   checked={formData.rememberMe}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
                   disabled={loading}
                 />
                 <span className="ml-2 text-sm text-gray-600">
@@ -131,7 +131,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </label>
               <button
                 type="button"
-                className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                className="text-sm text-amber-600 hover:text-amber-800 transition-colors"
               >
                 Esqueceu a senha?
               </button>
@@ -143,7 +143,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               className={`w-full p-3 rounded-lg font-medium transition-all ${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200"
+                  : "bg-amber-500 hover:bg-amber-600 focus:ring-4 focus:ring-amber-200"
               } text-white`}
             >
               {loading ? (
@@ -186,3 +186,5 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 };
 
 export default Login;
+
+

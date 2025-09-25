@@ -30,7 +30,7 @@ const ConfiguracoesPage: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center p-3 rounded-lg text-left transition-colors ${
                     activeTab === tab.id
-                      ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-500'
+                      ? 'bg-amber-100 text-amber-700 border-l-4 border-amber-500'
                       : 'hover:bg-gray-100'
                   }`}
                 >
@@ -55,7 +55,7 @@ const ConfiguracoesPage: React.FC = () => {
                       alt="Avatar"
                       className="w-20 h-20 rounded-full"
                     />
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    <button className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600">
                       Alterar Foto
                     </button>
                   </div>
@@ -66,7 +66,7 @@ const ConfiguracoesPage: React.FC = () => {
                       <input
                         type="text"
                         defaultValue={user?.name}
-                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                     </div>
                     <div>
@@ -74,7 +74,7 @@ const ConfiguracoesPage: React.FC = () => {
                       <input
                         type="email"
                         defaultValue={user?.email}
-                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                     </div>
                     <div>
@@ -82,7 +82,7 @@ const ConfiguracoesPage: React.FC = () => {
                       <input
                         type="text"
                         defaultValue={user?.role}
-                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                     </div>
                     <div>
@@ -90,7 +90,7 @@ const ConfiguracoesPage: React.FC = () => {
                       <input
                         type="text"
                         placeholder="123456"
-                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                     </div>
                   </div>
@@ -112,19 +112,19 @@ const ConfiguracoesPage: React.FC = () => {
                       <input
                         type="password"
                         placeholder="Senha atual"
-                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                       <input
                         type="password"
                         placeholder="Nova senha"
-                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
                       <input
                         type="password"
                         placeholder="Confirmar nova senha"
-                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                       />
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                      <button className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600">
                         Alterar Senha
                       </button>
                     </div>
@@ -163,7 +163,7 @@ const ConfiguracoesPage: React.FC = () => {
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
                       </label>
                     </div>
                   ))}
@@ -213,4 +213,4 @@ const ConfiguracoesPage: React.FC = () => {
   );
 };
 
-export default ConfiguracoesPage;
+export default ConfiguracoesPage;;

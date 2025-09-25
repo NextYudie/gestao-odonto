@@ -82,7 +82,7 @@ const Calendar = ({ currentMonth, setCurrentMonth, appointments }) => {
               <>
                 {day}
                 {hasAppointment(day) && (
-                  <span className="w-2 h-2 bg-blue-600 rounded-full inline-block ml-1"></span>
+                  <span className="w-2 h-2 bg-amber-500 rounded-full inline-block ml-1"></span>
                 )}
               </>
             )}

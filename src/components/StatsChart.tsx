@@ -3,7 +3,7 @@ const StatsChart = () => {
     {
       label: 'Taxa de Ocupação',
       percentage: 75,
-      color: 'bg-blue-600'
+      color: 'bg-amber-500'
     },
     {
       label: 'Satisfação do Paciente',

@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
                 to={item.path}
                 className={({ isActive }) =>
                   `nav-item w-full flex items-center p-3 rounded-lg text-left transition-all duration-300 ${
-                    isActive ? "bg-blue-700" : "hover:bg-blue-600"
+                    isActive ? "bg-amber-700" : "hover:bg-amber-600"
                   }`
                 }
               >
@@ -77,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
                 to={item.path}
                 className={({ isActive }) =>
                   `nav-item w-full flex items-center p-3 rounded-lg text-left transition-all duration-300 ${
-                    isActive ? "bg-blue-700" : "hover:bg-blue-600"
+                    isActive ? "bg-amber-700" : "hover:bg-amber-600"
                   }`
                 }
               >
@@ -89,7 +89,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
         )}
       </nav>
 
-      <div className="mt-auto pt-8 border-t border-blue-400">
+      <div className="mt-auto pt-8 border-t border-amber-400">
         <div className="flex items-center p-1">
           <img
             src="https://i.cbc.ca/1.5359228.1577206958!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_1180/smudge-the-viral-cat.jpg?im="
@@ -103,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
         </div>
         <button
           onClick={handleLogout}
-          className="w-full mt-2 p-3 text-left rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full mt-2 p-3 text-left rounded-lg hover:bg-amber-700 transition-colors"
         >
           <i className="fas fa-sign-out-alt w-6 mr-3"></i>
           Sair
@@ -114,3 +114,4 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
 };
 
 export default Sidebar;
+
