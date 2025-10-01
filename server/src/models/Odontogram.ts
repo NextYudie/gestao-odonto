@@ -30,7 +30,7 @@ export class OdontogramModel {
       new Date().toISOString(),
     ]);
     
-    return result.insertId;
+    return result[0].insertId;
   }
 
   static async update(id: number, odontogramData: Partial<Omit<Odontogram, 'id' | 'patient_id' | 'created_at'>>): Promise<boolean> {

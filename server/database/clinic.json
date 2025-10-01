@@ -220,5 +220,35 @@
       "oral_hygiene_habits": "tometome",
       "created_at": "2025-09-16T13:24:23.637Z"
     }
+  ],
+  "odontograms": [
+    {
+      "id": 1,
+      "patient_id": 2,
+      "chart_data": "{\"11\":{\"center\":\"extraído\",\"right\":\"implante\",\"bottom\":\"extraído\"},\"12\":{\"center\":\"restaurado\",\"right\":\"extraído\",\"left\":\"cariado\"},\"36\":{\"center\":\"restaurado\"},\"37\":{\"center\":\"implante\"}}",
+      "chart_type": "inicial",
+      "created_at": "2025-09-30T13:57:59.682Z"
+    },
+    {
+      "id": 2,
+      "patient_id": 2,
+      "chart_data": "{\"11\":{\"center\":\"extraído\"},\"41\":{\"center\":\"cariado\"}}",
+      "chart_type": "inicial",
+      "created_at": "2025-09-30T13:58:16.160Z"
+    },
+    {
+      "id": 3,
+      "patient_id": 2,
+      "chart_data": "{\"34\":{\"center\":\"cariado\"},\"35\":{\"center\":\"restaurado\"},\"36\":{\"center\":\"coroa\"}}",
+      "chart_type": "inicial",
+      "created_at": "2025-09-30T13:58:46.405Z"
+    },
+    {
+      "id": 4,
+      "patient_id": 2,
+      "chart_data": "{\"32\":{\"center\":\"extraído\"},\"34\":{\"left\":\"restaurado\"},\"35\":{\"center\":\"coroa\"}}",
+      "chart_type": "inicial",
+      "created_at": "2025-09-30T14:01:54.099Z"
+    }
   ]
 }

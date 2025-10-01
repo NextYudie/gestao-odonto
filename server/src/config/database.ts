@@ -30,10 +30,16 @@ export const createConnection = (): Database => {
     if (fs.existsSync(dbPath)) {
       const data = fs.readFileSync(dbPath, "utf8");
       db = JSON.parse(data);
-      // Ensure anamneses property exists
-      if (!db.anamneses) {
-        db.anamneses = [];
-        saveDatabase(); // Save the updated structure
+      const tables = ["users", "patients", "appointments", "medical_records", "notifications", "anamneses", "odontograms"];
+      let dbUpdated = false;
+      tables.forEach(table => {
+        if (!db[table]) {
+          db[table] = [];
+          dbUpdated = true;
+        }
+      });
+      if (dbUpdated) {
+        saveDatabase();
       }
     } else {
       db = {
@@ -130,7 +136,7 @@ export const executeQuery = <T = any>(
       (db as any)[tableName].push(newRecord);
       saveDatabase();
 
-      return [{ lastID: newRecord.id, changes: 1 } as any];
+      return [{ insertId: newRecord.id, changes: 1 } as any];
     } else if (trimmedQuery.startsWith("UPDATE")) {
       const tableMatch = query.match(/UPDATE\s+(\w+)/i);
       if (!tableMatch || !tableMatch[1]) return [];

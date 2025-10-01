@@ -98,7 +98,23 @@ const ProntuariosPage: React.FC = () => {
       setError(null);
       const response = await apiService.getOdontogramsByPatient(patientId);
       if (response.success && response.data) {
-        setOdontograms(response.data);
+        const parsedOdontograms = response.data.map(odontogram => {
+          try {
+            return {
+              ...odontogram,
+              chart_data: typeof odontogram.chart_data === 'string' 
+                ? JSON.parse(odontogram.chart_data) 
+                : odontogram.chart_data,
+            };
+          } catch (e) {
+            console.error('Failed to parse chart_data:', e);
+            return {
+              ...odontogram,
+              chart_data: {},
+            };
+          }
+        });
+        setOdontograms(parsedOdontograms);
       } else {
         setOdontograms([]);
         setError(response.message);
@@ -204,7 +220,7 @@ const ProntuariosPage: React.FC = () => {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-800">{selectedPatient.name}</h2>
-                  <p className="text-gray-600">Nascimento: {format(new Date(selectedPatient.birth_date), 'dd/MM/yyyy')}</p>
+                  <p className="text-gray-600">Nascimento: {selectedPatient.birth_date && !isNaN(new Date(selectedPatient.birth_date).getTime()) ? format(new Date(selectedPatient.birth_date), 'dd/MM/yyyy') : 'Data Inválida'}</p>
                   <p className="text-gray-600">CPF: {selectedPatient.cpf}</p>
                 </div>
               </div>
