@@ -1,4 +1,5 @@
-import type { Anamnese, Appointment, Patient, User, Doctor, PaginatedResponse, Odontogram } from "../types";
+import type { Anamnese, Patient, User, Doctor, PaginatedResponse, Odontogram } from "../types";
+import type { Appointment } from "../types/Appointment";
 
 const API_BASE_URL = "http://localhost:3001/api";
 
@@ -396,6 +397,38 @@ class ApiService {
     });
 
     return this.handleResponse<ApiResponse<any[]>>(response);
+  }
+
+  // Financial
+  async getFinancialSummary(): Promise<ApiResponse<{ monthlyRevenue: number; monthlyExpenses: number; monthlyProfit: number; }>> {
+    const response = await fetch(`${API_BASE_URL}/transactions/summary`, {
+      headers: this.getAuthHeaders(),
+    });
+    return this.handleResponse(response);
+  }
+
+  async getTransactions(): Promise<ApiResponse<any[]>> {
+    const response = await fetch(`${API_BASE_URL}/transactions`, {
+      headers: this.getAuthHeaders(),
+    });
+    return this.handleResponse(response);
+  }
+
+  async createTransaction(transaction: { date: string; description: string; type: 'revenue' | 'expense'; amount: number }): Promise<ApiResponse> {
+    const response = await fetch(`${API_BASE_URL}/transactions`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(transaction),
+    });
+    return this.handleResponse(response);
+  }
+
+  // Reports
+  async getReports(period: string): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_BASE_URL}/reports?period=${period}`, {
+      headers: this.getAuthHeaders(),
+    });
+    return this.handleResponse(response);
   }
 }
 

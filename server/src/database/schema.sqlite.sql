@@ -95,17 +95,23 @@ BEGIN
   UPDATE medical_records SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
 
--- Notifications table
-CREATE TABLE IF NOT EXISTS notifications (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
-  title TEXT NOT NULL,
-  message TEXT NOT NULL,
-  type TEXT CHECK(type IN ('info', 'success', 'warning', 'error')) DEFAULT 'info',
-  is_read BOOLEAN DEFAULT 0,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS odontograms (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patient_id INTEGER NOT NULL,
+    chart_data TEXT NOT NULL, -- JSON stored as TEXT
+    chart_type TEXT NOT NULL CHECK(chart_type IN ('inicial', 'plano_tratamento')),
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
+);
+
+CREATE TABLE transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    description TEXT NOT NULL,
+    type TEXT NOT NULL CHECK(type IN ('revenue', 'expense')),
+    amount REAL NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes for better performance

@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import Calendar from './Calendar';
 import AppointmentsTable from './AppointmentsTable';
 import { useAppointments } from '../hooks/useAppointments';
+import AppointmentsForDayModal from './AppointmentsForDayModal';
 
 interface OutletContext {
   onNewAppointment: () => void;
@@ -11,10 +12,20 @@ interface OutletContext {
 const Agendamentos: React.FC = () => {
   const { onNewAppointment } = useOutletContext<OutletContext>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {appointments}=useAppointments()
-  console.log(appointments)
-  
+  const { appointments } = useAppointments();
+
+  const handleDayClick = (date: Date) => {
+    setSelectedDate(date);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDate(null);
+  };
 
   return (
     <div className="p-6">
@@ -33,9 +44,17 @@ const Agendamentos: React.FC = () => {
         currentMonth={currentMonth}
         setCurrentMonth={setCurrentMonth}
         appointments={appointments.data}
+        onDayClick={handleDayClick}
       />
 
       <AppointmentsTable appointments={appointments.data} />
+
+      <AppointmentsForDayModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        date={selectedDate}
+        appointments={appointments.data || []}
+      />
     </div>
   );
 };

@@ -18,6 +18,7 @@ import ConfiguracoesPage from "./pages/ConfiguracoesPage";
 import PacientesPage from "./pages/PacientesPage";
 import ProntuariosPage from "./pages/ProntuariosPage";
 import RelatoriosPage from "./pages/RelatoriosPage";
+import FinanceiroPage from "./pages/FinanceiroPage";
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated, loading, user } = useAuth();
@@ -46,6 +47,7 @@ const AppRoutes: React.FC = () => {
         <Route path="pacientes" element={<PacientesPage />} />
         <Route path="prontuarios" element={<ProntuariosPage />} />
         <Route path="relatorios" element={<RelatoriosPage />} />
+        <Route path="financeiro" element={<FinanceiroPage />} />
         <Route path="configuracoes" element={<ConfiguracoesPage />} />
 
         {user?.role === "admin" && (

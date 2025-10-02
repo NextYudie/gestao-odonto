@@ -11,22 +11,6 @@ export interface User {
   updated_at?: string;
 }
 
-export interface Appointment {
-  id: number;
-  patient_id: number;
-  doctor_id: number;
-  specialty: string;
-  appointment_date: string;
-  appointment_time: string;
-  duration?: number;
-  status: 'scheduled' | 'confirmed' | 'cancelled' | 'completed';
-  notes?: string;
-  created_at?: string;
-  updated_at?: string;
-  patient?: Patient;
-  doctor?: User;
-}
-
 export interface Patient {
   id: number;
   name: string;

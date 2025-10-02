@@ -30,7 +30,7 @@ export const createConnection = (): Database => {
     if (fs.existsSync(dbPath)) {
       const data = fs.readFileSync(dbPath, "utf8");
       db = JSON.parse(data);
-      const tables = ["users", "patients", "appointments", "medical_records", "notifications", "anamneses", "odontograms"];
+      const tables = ["users", "patients", "appointments", "medical_records", "notifications", "anamneses", "odontograms", "transactions"];
       let dbUpdated = false;
       tables.forEach(table => {
         if (!db[table]) {

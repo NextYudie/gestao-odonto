@@ -14,6 +14,7 @@ const navigationAdmin: NavigationItem[] = [
   { path: "/agendamentos", label: "Agendamentos", icon: "fas fa-calendar-alt" },
   { path: "/pacientes", label: "Pacientes", icon: "fas fa-user-injured" },
   { path: "/prontuarios", label: "Prontuários", icon: "fas fa-file-medical" },
+  { path: "/financeiro", label: "Gestão Financeira", icon: "fas fa-wallet" },
   { path: "/relatorios", label: "Relatórios", icon: "fas fa-chart-bar" },
   { path: "/admin", label: "Admin", icon: "fas fa-user-shield" },
   { path: "/configuracoes", label: "Configurações", icon: "fas fa-cog" },
@@ -24,6 +25,7 @@ const navigationMedic: NavigationItem[] = [
   { path: "/agendamentos", label: "Agendamentos", icon: "fas fa-calendar-alt" },
   { path: "/pacientes", label: "Pacientes", icon: "fas fa-user-injured" },
   { path: "/prontuarios", label: "Prontuários", icon: "fas fa-file-medical" },
+  { path: "/financeiro", label: "Gestão Financeira", icon: "fas fa-wallet" },
   { path: "/relatorios", label: "Relatórios", icon: "fas fa-chart-bar" },
   { path: "/configuracoes", label: "Configurações", icon: "fas fa-cog" },
 ];

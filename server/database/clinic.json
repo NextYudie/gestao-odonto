@@ -250,5 +250,16 @@
       "chart_type": "inicial",
       "created_at": "2025-09-30T14:01:54.099Z"
     }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "date": "2025-10-02",
+      "description": "flamengo aq, flamengo ali",
+      "type": "revenue",
+      "amount": 40000,
+      "created_at": "2025-10-02T13:45:16.774Z",
+      "updated_at": "2025-10-02T13:45:16.774Z"
+    }
   ]
 }

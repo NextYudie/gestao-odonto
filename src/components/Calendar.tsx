@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-const Calendar = ({ currentMonth, setCurrentMonth, appointments }) => {
+const Calendar = ({ currentMonth, setCurrentMonth, appointments, onDayClick }) => {
   const monthName = currentMonth.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
   const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
 
@@ -21,15 +21,25 @@ const Calendar = ({ currentMonth, setCurrentMonth, appointments }) => {
     
     // Add days of the month
     for (let day = 1; day <= daysInCurrentMonth; day++) {
-      days.push(day);
+      days.push(new Date(year, month, day));
     }
     
     return days;
   }, [currentMonth]);
 
-  const hasAppointment = (day) => {
-    return [5, 12, 19, 25].includes(day);
-  };
+  const appointmentsByDay = useMemo(() => {
+    const map = new Map();
+    if (appointments) {
+      appointments.forEach(app => {
+        const day = new Date(app.appointment_date).getDate();
+        if (!map.has(day)) {
+          map.set(day, []);
+        }
+        map.get(day).push(app);
+      });
+    }
+    return map;
+  }, [appointments, currentMonth]);
 
   const navigateMonth = (direction) => {
     const newDate = new Date(currentMonth);
@@ -69,25 +79,31 @@ const Calendar = ({ currentMonth, setCurrentMonth, appointments }) => {
       </div>
 
       <div className="grid grid-cols-7 gap-2">
-        {daysInMonth.map((day, index) => (
-          <div
-            key={index}
-            className={`calendar-day p-2 text-center border rounded cursor-pointer ${
-              day
-                ? 'hover:bg-blue-100'
-                : 'text-gray-300'
-            }`}
-          >
-            {day && (
-              <>
-                {day}
-                {hasAppointment(day) && (
-                  <span className="w-2 h-2 bg-amber-500 rounded-full inline-block ml-1"></span>
-                )}
-              </>
-            )}
-          </div>
-        ))}
+        {daysInMonth.map((date, index) => {
+          const dayNumber = date ? date.getDate() : null;
+          const hasAppointments = dayNumber ? appointmentsByDay.has(dayNumber) : false;
+
+          return (
+            <div
+              key={index}
+              onClick={() => date && onDayClick(date)}
+              className={`calendar-day p-2 text-center border rounded cursor-pointer ${
+                date
+                  ? 'hover:bg-blue-100'
+                  : 'text-gray-300'
+              }`}
+            >
+              {dayNumber && (
+                <>
+                  {dayNumber}
+                  {hasAppointments && (
+                    <span className="w-2 h-2 bg-amber-500 rounded-full inline-block ml-1"></span>
+                  )}
+                </>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   );

@@ -14,6 +14,8 @@ import doctorRoutes from '@/routes/doctors';
 import anamnesisRoutes from '@/routes/anamneses';
 import odontogramRoutes from '@/routes/odontograms';
 import signatureRoutes from '@/routes/signatures';
+import transactionRoutes from '@/routes/transactions';
+import reportRoutes from '@/routes/reports';
 
 config();
 
@@ -74,6 +76,8 @@ async function startServer() {
     app.use('/api/anamneses', anamnesisRoutes);
     app.use('/api/odontograms', odontogramRoutes);
     app.use('/api/signatures', signatureRoutes);
+    app.use('/api/transactions', transactionRoutes);
+    app.use('/api/reports', reportRoutes);
 
     app.use(notFoundHandler);
     app.use(errorHandler);

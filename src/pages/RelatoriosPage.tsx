@@ -1,7 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import apiService from '@/services/api';
 
 const RelatoriosPage: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<string>('30days');
+  const [reportsData, setReportsData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await apiService.getReports(selectedPeriod);
+        if (response.success && response.data) {
+          setReportsData(response.data);
+        } else {
+          setError(response.message);
+        }
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, [selectedPeriod]);
+
+  const formatCurrency = (value: number) => {
+    return (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  };
+
+  const specialtyData = reportsData?.appointmentsBySpecialty ? 
+    Object.entries(reportsData.appointmentsBySpecialty).map(([specialty, count]) => ({ specialty, count })) : [];
+  const totalSpecialtyCount = specialtyData.reduce((sum, item) => sum + (item.count as number), 0);
 
   return (
     <div className="p-6">
@@ -29,76 +62,70 @@ const RelatoriosPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Consultas por Especialidade</h2>
-          <div className="space-y-3">
-            {[
-              { specialty: 'Cardiologia', count: 45, percentage: 35 },
-              { specialty: 'Ortopedia', count: 32, percentage: 25 },
-              { specialty: 'Pediatria', count: 28, percentage: 22 },
-              { specialty: 'Dermatologia', count: 23, percentage: 18 }
-            ].map((item, index) => (
-              <div key={index}>
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm font-medium">{item.specialty}</span>
-                  <span className="text-sm text-gray-600">{item.count} consultas</span>
+      {loading && <p>Gerando relatórios...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {!loading && !error && reportsData && (
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-4">Consultas por Especialidade</h2>
+              <div className="space-y-3">
+                {specialtyData.length > 0 ? specialtyData.map((item, index) => (
+                  <div key={index}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium">{item.specialty}</span>
+                      <span className="text-sm text-gray-600">{item.count} consultas</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${totalSpecialtyCount > 0 ? ((item.count as number) / totalSpecialtyCount) * 100 : 0}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )) : <p className="text-gray-500">Nenhum dado de consulta para o período.</p>}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-4">Faturamento</h2>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                  <span>Receita Total</span>
+                  <span className="font-bold text-green-600">{formatCurrency(reportsData.financialReport.revenue)}</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${item.percentage}%` }}
-                  ></div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                  <span>Custos Operacionais</span>
+                  <span className="font-bold text-red-600">{formatCurrency(reportsData.financialReport.expenses)}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-blue-50 rounded border-l-4 border-blue-500">
+                  <span className="font-medium">Lucro Líquido</span>
+                  <span className="font-bold text-amber-600">{formatCurrency(reportsData.financialReport.profit)}</span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Faturamento Mensal</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
-              <span>Receita Total</span>
-              <span className="font-bold text-green-600">R$ 45.230,00</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
-              <span>Custos Operacionais</span>
-              <span className="font-bold text-red-600">R$ 12.450,00</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-blue-50 rounded border-l-4 border-blue-500">
-              <span className="font-medium">Lucro Líquido</span>
-              <span className="font-bold text-amber-600">R$ 32.780,00</span>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-3">Taxa de Ocupação</h3>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-amber-600 mb-2">75%</div>
-            <p className="text-sm text-gray-600">Média do período</p>
-          </div>
-        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-3">Novos Pacientes</h3>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-amber-600 mb-2">{reportsData.newPatientsCount}</div>
+                <p className="text-sm text-gray-600">No período</p>
+              </div>
+            </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-3">Satisfação</h3>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">4.8/5</div>
-            <p className="text-sm text-gray-600">Avaliação média</p>
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-3">Cancelamentos</h3>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-yellow-600 mb-2">{reportsData.cancellationRate.toFixed(1)}%</div>
+                <p className="text-sm text-gray-600">Taxa de cancelamento</p>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-3">Cancelamentos</h3>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-yellow-600 mb-2">8%</div>
-            <p className="text-sm text-gray-600">Taxa de cancelamento</p>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
