@@ -360,6 +360,43 @@ class ApiService {
 
     return this.handleResponse<ApiResponse>(response);
   }
+
+  // Signatures
+  async uploadSignature(patientId: number, signatureData: string | File, type: 'digital' | 'pdf'): Promise<ApiResponse> {
+    const token = localStorage.getItem("token");
+    const headers: HeadersInit = {
+      ...(token && { Authorization: `Bearer ${token}` }),
+    };
+
+    let body: BodyInit;
+
+    if (type === 'digital') {
+      headers['Content-Type'] = 'application/json';
+      body = JSON.stringify({ patientId, signature: signatureData, type });
+    } else { // pdf
+      const formData = new FormData();
+      formData.append('patientId', patientId.toString());
+      formData.append('type', type);
+      formData.append('signature', signatureData as File);
+      body = formData;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/signatures/upload`, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    return this.handleResponse<ApiResponse>(response);
+  }
+
+  async getSignaturesByPatient(patientId: number): Promise<ApiResponse<any[]>> {
+    const response = await fetch(`${API_BASE_URL}/signatures/patient/${patientId}`, {
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse<any[]>>(response);
+  }
 }
 
 export const apiService = new ApiService();

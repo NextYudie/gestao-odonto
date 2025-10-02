@@ -13,6 +13,7 @@ import appointmentRoutes from '@/routes/appointments';
 import doctorRoutes from '@/routes/doctors';
 import anamnesisRoutes from '@/routes/anamneses';
 import odontogramRoutes from '@/routes/odontograms';
+import signatureRoutes from '@/routes/signatures';
 
 config();
 
@@ -46,6 +47,8 @@ async function startServer() {
     app.use(express.json({ limit: '10mb' }));
     app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+    app.use('/uploads', express.static('uploads'));
+
     if (process.env.NODE_ENV !== 'production') {
       app.use(morgan('dev'));
     } else {
@@ -70,6 +73,7 @@ async function startServer() {
     app.use('/api/doctors', doctorRoutes);
     app.use('/api/anamneses', anamnesisRoutes);
     app.use('/api/odontograms', odontogramRoutes);
+    app.use('/api/signatures', signatureRoutes);
 
     app.use(notFoundHandler);
     app.use(errorHandler);
