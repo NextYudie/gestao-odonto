@@ -5,18 +5,41 @@ import type { AppointmentFormData } from "../types";
 import AppointmentModal from "./AppointmentModal";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
+import { useAppointments } from "../hooks/useAppointments";
+import { usePatients } from "../hooks/usePatients";
 
 const Layout: React.FC = () => {
   const { user } = useAuth();
+  const { createAppointment } = useAppointments();
+  const { patients } = usePatients();
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] =
     useState<boolean>(false);
   const [notificationCount, setNotificationCount] = useState<number>(3);
 
-  const handleAppointmentSubmit = (
+  const handleAppointmentSubmit = async (
     appointmentData: AppointmentFormData
-  ): void => {
-    console.log("Nova consulta criada:", appointmentData);
-    setIsAppointmentModalOpen(false);
+  ): Promise<void> => {
+    try {
+      const patient = patients.find(p => p.name === appointmentData.patient);
+      if (!patient) {
+        console.error("Paciente não encontrado");
+        return;
+      }
+
+      await createAppointment({
+        patient_id: patient.id,
+        doctor_id: user.id,
+        specialty: appointmentData.specialty,
+        appointment_date: appointmentData.date,
+        appointment_time: appointmentData.time,
+        duration: 30, // Default duration
+        status: "scheduled", // Default status
+        notes: appointmentData.observations,
+      });
+      setIsAppointmentModalOpen(false);
+    } catch (error) {
+      console.error("Erro ao criar agendamento:", error);
+    }
   };
 
   const handleNewAppointment = (): void => {

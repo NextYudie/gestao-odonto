@@ -102,7 +102,7 @@ class ApiService {
       headers: this.getAuthHeaders(),
     });
 
-    return this.handleResponse<ApiResponse<Patient[]>>(response);
+    return this.handleResponse<ApiResponse<PaginatedResponse<Patient>>>(response);
   }
 
   async getPatient(id: number): Promise<ApiResponse<Patient>> {

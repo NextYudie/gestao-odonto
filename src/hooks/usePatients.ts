@@ -14,7 +14,7 @@ export const usePatients = () => {
       const response = await apiService.getPatients();
 
       if (response.success && response.data) {
-        setPatients(response.data);
+        setPatients(response.data.data);
       } else {
         setError("Erro ao carregar pacientes");
       }
