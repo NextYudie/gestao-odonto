@@ -160,7 +160,7 @@ const PacientesPage: React.FC = () => {
           </div>
         </div>
 
-        {patients.data.length === 0 ? (
+        {patients.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <i className="fas fa-user-injured text-4xl mb-4"></i>
             <p className="text-lg">
@@ -192,7 +192,7 @@ const PacientesPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {patients.data.map((patient) => (
+                {patients.map((patient) => (
                   <tr key={patient.id} className="border-b hover:bg-gray-50">
                     <td className="p-3">
                       <div>
