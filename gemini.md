@@ -22,7 +22,7 @@ Este é um sistema de gerenciamento de clínica odontológica projetado para aju
 
 -   **Framework:** Express.js
 -   **Linguagem:** TypeScript
--   **Banco de Dados:** (Não especificado, mas há scripts para SQL)
+-   **Banco de Dados:** SQlite
 -   **Autenticação:** JWT (JSON Web Tokens)
 
 ## Estrutura do Projeto
