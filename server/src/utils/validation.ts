@@ -53,6 +53,7 @@ export const validatePatientInput = (data: any, isUpdate = false): ValidationRes
         }),
     address: Joi.string().optional().allow(''),
     emergency_contact: Joi.string().optional().allow(''),
+    medical_history: Joi.string().optional().allow(''), // Added medical_history validation
     status: Joi.string().valid('active', 'inactive').optional()
   });
 

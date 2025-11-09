@@ -71,6 +71,7 @@ export class PatientController {
       // Validate input
       const validation = validatePatientInput(patientData);
       if (!validation.isValid) {
+        console.error('Patient validation errors:', validation.errors); // Added log
         res.status(400).json({
           success: false,
           message: 'Dados de entrada inválidos',

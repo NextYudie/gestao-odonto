@@ -53,10 +53,12 @@ export class PatientModel {
 
   static async create(patientData: Omit<Patient, 'id' | 'created_at' | 'updated_at'>): Promise<number> {
     const query = `
-      INSERT INTO patients (name, email, phone, birth_date, cpf, address, emergency_contact, medical_history, status) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO patients (name, email, phone, birth_date, cpf, address, emergency_contact, medical_history, status, created_at, updated_at) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
+    const now = new Date().toISOString(); // Get current timestamp in ISO format
+
     const result: any = await executeQuery(query, [
       patientData.name,
       patientData.email || null,
@@ -66,7 +68,9 @@ export class PatientModel {
       patientData.address || null,
       patientData.emergency_contact || null,
       patientData.medical_history || null,
-      patientData.status || 'active'
+      patientData.status || 'active',
+      now, // created_at
+      now, // updated_at
     ]);
     
     return result.insertId;
@@ -84,6 +88,9 @@ export class PatientModel {
     });
 
     if (fields.length === 0) return false;
+
+    fields.push(`updated_at = ?`);
+    values.push(new Date().toISOString()); // Set updated_at to current timestamp
 
     values.push(id);
     
