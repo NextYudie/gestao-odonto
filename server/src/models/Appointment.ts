@@ -29,58 +29,42 @@ export class AppointmentModel {
     status?: string,
     date?: string
   ): Promise<PaginatedResponse<AppointmentWithDetails>> {
-    let query = `
-      SELECT 
-        a.*,
-        p.name as patient_name,
-        u.name as doctor_name
-      FROM appointments a
-      JOIN patients p ON a.patient_id = p.id
-      JOIN users u ON a.doctor_id = u.id
-      WHERE 1=1
-    `;
-    const params: any[] = [];
+    // Fetch all appointments, as the JSON query parser is unreliable for WHERE clauses
+    const allAppointments = await executeQuery<AppointmentWithDetails>('SELECT * FROM appointments');
+
+    // Apply filters in JavaScript
+    let filteredAppointments = allAppointments;
 
     if (doctorId) {
-      query += ` AND a.doctor_id = ?`;
-      params.push(doctorId);
+        filteredAppointments = filteredAppointments.filter(a => a.doctor_id == doctorId);
     }
 
     if (patientId) {
-      query += ` AND a.patient_id = ?`;
-      params.push(patientId);
+        filteredAppointments = filteredAppointments.filter(a => a.patient_id == patientId);
     }
 
     if (status) {
-      query += ` AND a.status = ?`;
-      params.push(status);
+        filteredAppointments = filteredAppointments.filter(a => a.status === status);
     }
 
     if (date) {
-      query += ` AND a.appointment_date = ?`;
-      params.push(date);
+        // Assuming appointment_date is a string in 'YYYY-MM-DD' format from the JSON db
+        filteredAppointments = filteredAppointments.filter(a => a.appointment_date == date);
     }
 
-    // Get total count
-    const countQuery = query
-      .replace('SELECT a.*, p.name as patient_name, u.name as doctor_name', 'SELECT COUNT(*) as total');
-    const countResult = await executeQuerySingle<{total: number}>(countQuery, params);
-    const total = countResult?.total || 0;
+    const total = filteredAppointments.length;
 
-    // Get paginated data
-    query += ` ORDER BY a.appointment_date DESC, a.appointment_time DESC LIMIT ? OFFSET ?`;
-    params.push(limit, offset);
-    
-    const data = await executeQuery<AppointmentWithDetails>(query, params);
+    // Apply pagination
+    const paginatedData = filteredAppointments.slice(offset, offset + limit);
 
     return {
-      data,
-      pagination: {
-        current_page: Math.floor(offset / limit) + 1,
-        per_page: limit,
-        total,
-        total_pages: Math.ceil(total / limit)
-      }
+        data: paginatedData,
+        pagination: {
+            current_page: Math.floor(offset / limit) + 1,
+            per_page: limit,
+            total,
+            total_pages: Math.ceil(total / limit)
+        }
     };
   }
 
@@ -166,9 +150,10 @@ if (conflict) {
     values.push(id);
     
     const query = `UPDATE appointments SET ${fields.join(', ')} WHERE id = ?`;
-    const result: any = await executeQuery(query, values);
+    const result: any[] = await executeQuery(query, values);
     
-    return result.affectedRows > 0;
+    // The custom JSON parser returns [{ changes: 1 }] on success
+    return result && result.length > 0 && result[0].changes > 0;
   }
 
   static async updateStatus(id: number, status: Appointment['status']): Promise<boolean> {

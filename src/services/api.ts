@@ -218,6 +218,24 @@ class ApiService {
     return this.handleResponse<ApiResponse>(response);
   }
 
+  async getAppointmentsByPatient(patientId: number): Promise<ApiResponse<Appointment[]>> {
+    const response = await fetch(`${API_BASE_URL}/appointments/patient/${patientId}`, {
+      headers: this.getAuthHeaders(),
+    });
+
+    return this.handleResponse<ApiResponse<Appointment[]>>(response);
+  }
+
+  async updateAppointmentPayment(appointmentId: number, paymentData: { paid: boolean }): Promise<ApiResponse<Appointment>> {
+    const response = await fetch(`${API_BASE_URL}/appointments/${appointmentId}/payment`, {
+      method: "PATCH", // Using PATCH as we are partially updating the resource
+      headers: this.getAuthHeaders(),
+      body: JSON.stringify(paymentData),
+    });
+
+    return this.handleResponse<ApiResponse<Appointment>>(response);
+  }
+
   async getAppointmentsStats(): Promise<
     ApiResponse<{
       total: number;

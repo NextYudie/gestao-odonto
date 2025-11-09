@@ -11,6 +11,7 @@ export interface Appointment {
   duration?: number;
   status: 'scheduled' | 'confirmed' | 'cancelled' | 'completed';
   notes?: string;
+  paid?: boolean;
   created_at?: string;
   updated_at?: string;
   patient?: Patient;

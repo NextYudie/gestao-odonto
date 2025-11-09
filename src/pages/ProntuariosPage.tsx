@@ -5,6 +5,7 @@ import AnamneseModal from '@/components/AnamneseModal';
 import OdontogramModal from '@/components/OdontogramModal';
 import OdontogramChart from '@/components/OdontogramChart'; // Import OdontogramChart
 import SignatureTab from '@/components/SignatureTab';
+import PagamentoTab from '@/components/PagamentoTab';
 
 interface Patient {
   id: number;
@@ -259,6 +260,16 @@ const ProntuariosPage: React.FC = () => {
                   >
                     Assinatura
                   </button>
+                  <button
+                    onClick={() => setActiveTab('pagamento')}
+                    className={`${
+                      activeTab === 'pagamento'
+                        ? 'border-amber-500 text-amber-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                  >
+                    Pagamento
+                  </button>
                 </nav>
               </div>
 
@@ -345,6 +356,10 @@ const ProntuariosPage: React.FC = () => {
 
                 {activeTab === 'assinatura' && selectedPatient && (
                   <SignatureTab patientId={selectedPatient.id} />
+                )}
+
+                {activeTab === 'pagamento' && selectedPatient && (
+                  <PagamentoTab patientId={selectedPatient.id} />
                 )}
               </div>
             </div>

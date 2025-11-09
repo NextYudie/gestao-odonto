@@ -345,4 +345,82 @@ export class AppointmentController {
       } as ApiResponse);
     }
   }
+
+  static async getAppointmentsByPatient(req: Request, res: Response): Promise<void> {
+    try {
+      const patientId = parseInt(req.params.patientId);
+
+      if (isNaN(patientId)) {
+        res.status(400).json({
+          success: false,
+          message: 'ID do paciente inválido'
+        } as ApiResponse);
+        return;
+      }
+
+      // Using the existing findAll method from the model
+      const result = await AppointmentModel.findAll(100, 0, undefined, patientId);
+
+      res.status(200).json({
+        success: true,
+        message: 'Agendamentos do paciente recuperados com sucesso',
+        data: result.data // Sending only the data array
+      } as ApiResponse<AppointmentWithDetails[]>);
+
+    } catch (error) {
+      console.error('Get appointments by patient error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erro interno do servidor'
+      } as ApiResponse);
+    }
+  }
+
+  static async updateAppointmentPayment(req: Request, res: Response): Promise<void> {
+    try {
+      const id = parseInt(req.params.id);
+      const { paid } = req.body;
+
+      if (isNaN(id)) {
+        res.status(400).json({
+          success: false,
+          message: 'ID do agendamento inválido'
+        } as ApiResponse);
+        return;
+      }
+
+      if (typeof paid !== 'boolean') {
+        res.status(400).json({
+          success: false,
+          message: 'O campo "paid" é obrigatório e deve ser um booleano'
+        } as ApiResponse);
+        return;
+      }
+
+      const updated = await AppointmentModel.update(id, { paid });
+
+      if (!updated) {
+        res.status(404).json({
+          success: false,
+          message: 'Agendamento não encontrado ou nenhuma alteração foi feita'
+        } as ApiResponse);
+        return;
+      }
+
+      const updatedAppointment = await AppointmentModel.findById(id);
+
+      res.status(200).json({
+        success: true,
+        message: 'Status de pagamento do agendamento atualizado com sucesso',
+        data: updatedAppointment
+      } as ApiResponse<AppointmentWithDetails>);
+
+    } catch (error) {
+      console.error('Update appointment payment error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Erro interno do servidor'
+      } as ApiResponse);
+    }
+  }
 }

@@ -24,6 +24,9 @@ router.get('/available-slots/:doctorId/:date', asyncHandler(AppointmentControlle
 // GET /api/appointments/:id
 router.get('/:id', asyncHandler(AppointmentController.getById));
 
+// GET /api/appointments/patient/:patientId
+router.get('/patient/:patientId', asyncHandler(AppointmentController.getAppointmentsByPatient));
+
 // POST /api/appointments
 router.post('/', asyncHandler(AppointmentController.create));
 
@@ -32,6 +35,9 @@ router.put('/:id', asyncHandler(AppointmentController.update));
 
 // PATCH /api/appointments/:id/status
 router.patch('/:id/status', asyncHandler(AppointmentController.updateStatus));
+
+// PATCH /api/appointments/:id/payment
+router.patch('/:id/payment', asyncHandler(AppointmentController.updateAppointmentPayment));
 
 // DELETE /api/appointments/:id
 router.delete('/:id', asyncHandler(AppointmentController.delete));

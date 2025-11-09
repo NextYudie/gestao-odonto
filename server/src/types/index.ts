@@ -66,6 +66,7 @@ export interface Appointment {
   duration: number;
   status: 'scheduled' | 'confirmed' | 'cancelled' | 'completed';
   notes?: string;
+  paid?: boolean;
   created_at: Date;
   updated_at: Date;
 }

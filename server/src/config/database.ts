@@ -106,17 +106,26 @@ export const executeQuery = <T = any>(
       const tableName = tableMatch[1].toLowerCase();
       let records = (db as any)[tableName] || [];
 
-      // Basic WHERE clause support
+      // Improved WHERE clause support
       const whereMatch = query.match(/WHERE\s+(.+?)(?:\s+ORDER|\s+LIMIT|$)/i);
-      if (whereMatch && whereMatch[1] && params.length > 0) {
-        const condition = whereMatch[1];
-        if (condition && condition.includes("id = ?")) {
-          records = records.filter((r: any) => r.id === params[0]);
-        } else if (condition && condition.includes("email = ?")) {
-          records = records.filter((r: any) => r.email === params[0]);
-        } else if (condition && condition.includes("cpf = ?")) {
-          records = records.filter((r: any) => r.cpf === params[0]);
-        }
+      if (whereMatch && whereMatch[1]) {
+          const conditions = whereMatch[1].split(/ and /i);
+          let paramIndex = 0;
+          conditions.forEach(condition => {
+              const trimmedCondition = condition.trim();
+              if (trimmedCondition === '1=1') return;
+
+              if (trimmedCondition.includes('=')) {
+                  const [field, value] = trimmedCondition.split(/\s*=\s*/);
+                  if (value.trim() === '?') {
+                      const paramValue = params[paramIndex++];
+                      const cleanField = field.split('.').pop()?.trim(); // 'a.patient_id' -> 'patient_id'
+                      if (cleanField && paramValue !== undefined) {
+                          records = records.filter(r => r[cleanField] == paramValue);
+                      }
+                  }
+              }
+          });
       }
 
       return records as T[];

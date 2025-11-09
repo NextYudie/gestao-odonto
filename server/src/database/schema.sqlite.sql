@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS appointments (
   duration INTEGER DEFAULT 30,
   status TEXT CHECK(status IN ('scheduled', 'confirmed', 'cancelled', 'completed')) DEFAULT 'scheduled',
   notes TEXT,
+  paid BOOLEAN DEFAULT FALSE,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   
