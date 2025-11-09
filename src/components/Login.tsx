@@ -56,12 +56,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         {/* Logo e Header */}
         <div className="text-center mb-8">
           <div className="bg-white rounded-full w-20 h-20 mx-auto flex items-center justify-center shadow-lg mb-4">
-            <i className="fas fa-heartbeat text-3xl text-amber-600"></i>
+            <i className="fas fa-tooth text-3xl text-amber-600"></i>
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Clínica Saúde Total
+            Clínica do Yudie
           </h1>
-          <p className="text-gray-600">Sistema de Gestão Médica</p>
+          <p className="text-gray-600">Sistema de Gestão Odontológica</p>
         </div>
 
         {/* Formulário de Login */}
@@ -177,7 +177,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-500">
-            © 2024 Clínica Saúde Total. Todos os direitos reservados.
+            © 2024 Clínica do Yudie. Todos os direitos reservados.
           </p>
         </div>
       </div>
