@@ -86,20 +86,50 @@ export class AppointmentModel {
 
   static async create(appointmentData: Omit<Appointment, 'id' | 'created_at' | 'updated_at'>): Promise<number> {
     // Check for conflicts
-    const conflictQuery = `
-      SELECT id FROM appointments 
-      WHERE doctor_id = ? AND appointment_date = ? AND appointment_time = ? AND status != 'cancelled'
-    `;
+//     const conflictQuery = `
+//   SELECT id FROM appointments
+//   WHERE doctor_id = ?
+//     AND DATE(appointment_date) = DATE(?)
+//     AND TIME(appointment_time) = TIME(?)
+//     AND status != 'cancelled'
+// `;   
     
-    const conflict = await executeQuerySingle(conflictQuery, [
-      appointmentData.doctor_id,
-      appointmentData.appointment_date,
-      appointmentData.appointment_time
-    ]);
+//     const conflict = await executeQuerySingle(conflictQuery, [
+//       appointmentData.doctor_id,
+//       appointmentData.appointment_date,
+//       appointmentData.appointment_time
+//     ]);
+const allAppointments = await executeQuery<Appointment>(
+  `SELECT * FROM appointments WHERE doctor_id = ? AND status != 'cancelled'`,
+  [appointmentData.doctor_id]
+);
 
-    if (conflict) {
-      throw new Error('Horário já ocupado para este médico');
-    }
+const conflict = allAppointments.find(
+  (a) =>
+    a.appointment_date === appointmentData.appointment_date &&
+    a.appointment_time === appointmentData.appointment_time
+);
+
+if (conflict) {
+  const err: any = new Error('Horário já ocupado para este médico');
+  err.code = 'CONFLICT';
+  throw err;
+}
+
+
+    console.log('🧩 Checking conflict with:', {
+    doctor_id: appointmentData.doctor_id,
+    date: appointmentData.appointment_date,
+    time: appointmentData.appointment_time
+  });
+
+  console.log('🧩 Conflict query result:', conflict);
+
+    if (conflict && Object.keys(conflict).length > 0) {
+  const err: any = new Error('Horário já ocupado para este médico');
+  err.code = 'CONFLICT';
+  throw err;
+}
 
     const query = `
       INSERT INTO appointments (patient_id, doctor_id, specialty, appointment_date, appointment_time, duration, status, notes) 

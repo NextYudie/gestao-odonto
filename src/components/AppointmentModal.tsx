@@ -3,7 +3,7 @@ import { useState } from 'react';
 const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     patient: '',
-    specialty: 'Cardiologia',
+    specialty: '',
     date: '',
     time: '',
     observations: ''
