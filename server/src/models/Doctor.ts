@@ -58,9 +58,11 @@ export class DoctorModel {
     doctorData: Omit<Doctor, "id" | "created_at" | "updated_at">
   ): Promise<number> {
     const query = `
-      INSERT INTO doctors (name, email, phone, cro, specialty, status)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO doctors (name, email, phone, cro, specialty, status, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
+
+    const now = new Date().toISOString(); // Get current timestamp in ISO format
 
     const result: any = await executeQuery(query, [
       doctorData.name,
@@ -69,6 +71,8 @@ export class DoctorModel {
       doctorData.cro,
       doctorData.specialty,
       doctorData.status || "active",
+      now, // created_at
+      now, // updated_at
     ]);
 
     return result.insertId;
@@ -94,6 +98,9 @@ export class DoctorModel {
     });
 
     if (fields.length === 0) return false;
+
+    fields.push(`updated_at = ?`);
+    values.push(new Date().toISOString()); // Set updated_at to current timestamp
 
     values.push(id);
 
@@ -130,25 +137,29 @@ export class DoctorModel {
     inactive: number;
     new_this_month: number;
   }> {
-    const queries = [
-      `SELECT COUNT(*) as total FROM doctors`,
-      `SELECT COUNT(*) as active FROM doctors WHERE status = 'active'`,
-      `SELECT COUNT(*) as inactive FROM doctors WHERE status = 'inactive'`,
-      `SELECT COUNT(*) as new_this_month FROM doctors WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())`,
-    ];
+    // Fetch all doctors to perform in-memory calculations for stats
+    const allDoctorsResponse = await DoctorModel.findAll(Number.MAX_SAFE_INTEGER, 0);
+    const allDoctors = allDoctorsResponse.data;
 
-    const [totalResult, activeResult, inactiveResult, newThisMonthResult] =
-      await Promise.all(
-        queries.map((query) =>
-          executeQuerySingle<{ [key: string]: number }>(query)
-        )
-      );
+    const total = allDoctors.length;
+    const active = allDoctors.filter(doctor => doctor.status === 'active').length;
+    const inactive = allDoctors.filter(doctor => doctor.status === 'inactive').length;
+
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const new_this_month = allDoctors.filter(doctor => {
+      if (!doctor.created_at) return false;
+      const createdAt = new Date(doctor.created_at);
+      return createdAt.getMonth() === currentMonth && createdAt.getFullYear() === currentYear;
+    }).length;
 
     return {
-      total: totalResult?.total || 0,
-      active: activeResult?.active || 0,
-      inactive: inactiveResult?.inactive || 0,
-      new_this_month: newThisMonthResult?.new_this_month || 0,
+      total,
+      active,
+      inactive,
+      new_this_month,
     };
   }
 }
