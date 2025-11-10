@@ -116,12 +116,10 @@ if (conflict) {
 }
 
     const query = `
-      INSERT INTO appointments (patient_id, doctor_id, specialty, appointment_date, appointment_time, duration, status, notes, created_at, updated_at) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO appointments (patient_id, doctor_id, specialty, appointment_date, appointment_time, duration, status, notes) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
-    const now = new Date().toISOString(); // Get current timestamp in ISO format
-
     const result: any = await executeQuery(query, [
       appointmentData.patient_id,
       appointmentData.doctor_id,
@@ -130,9 +128,7 @@ if (conflict) {
       appointmentData.appointment_time,
       appointmentData.duration || 30,
       appointmentData.status || 'scheduled',
-      appointmentData.notes || null,
-      now, // created_at
-      now, // updated_at
+      appointmentData.notes || null
     ]);
     
     return result.insertId;
@@ -150,9 +146,6 @@ if (conflict) {
     });
 
     if (fields.length === 0) return false;
-
-    fields.push(`updated_at = ?`);
-    values.push(new Date().toISOString()); // Set updated_at to current timestamp
 
     values.push(id);
     

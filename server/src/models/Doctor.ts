@@ -24,9 +24,9 @@ export class DoctorModel {
     const params: any[] = [];
 
     if (search) {
-      query += ` AND (name LIKE ? OR cro LIKE ? OR email LIKE ? OR specialty LIKE ?)`;
+      query += ` AND (name LIKE ? OR cro LIKE ? OR email LIKE ?)`;
       const searchTerm = `%${search}%`;
-      params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+      params.push(searchTerm, searchTerm, searchTerm);
     }
 
     // Get total count

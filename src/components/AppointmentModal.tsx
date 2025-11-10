@@ -1,53 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useDoctors } from '../hooks/useDoctors';
-import { usePatients } from '../hooks/usePatients';
-import type { Doctor, Patient } from '../types';
+import { useState } from 'react';
 
 const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
-  const { doctors, fetchDoctors } = useDoctors();
-  const { patients, fetchPatients } = usePatients();
-
   const [formData, setFormData] = useState({
-    patient_id: null as number | null,
-    doctor_id: null as number | null,
-    specialty: '', // This will come from the selected doctor
-    appointment_date: '',
-    appointment_time: '',
-    notes: ''
+    patient: '',
+    specialty: '',
+    date: '',
+    time: '',
+    observations: ''
   });
 
-  const [doctorSearchTerm, setDoctorSearchTerm] = useState('');
-  const [patientSearchTerm, setPatientSearchTerm] = useState('');
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const patients = [
+    { id: 1, name: 'Maria Silva' },
+    { id: 2, name: 'João Santos' },
+    { id: 3, name: 'Ana Costa' }
+  ];
 
-  // Fetch doctors and patients on component mount and when search terms change
-  useEffect(() => {
-    fetchDoctors(1, 10, doctorSearchTerm);
-  }, [doctorSearchTerm, fetchDoctors]);
+  const specialties = [
+    'Clinico Geral',
+    'Estética',
+    'Periodontia',
+    'Ortodontia'
+  ];
 
-  useEffect(() => {
-    fetchPatients(1, 10, patientSearchTerm);
-  }, [patientSearchTerm, fetchPatients]);
-
-  // Update specialty when a doctor is selected
-  useEffect(() => {
-    if (selectedDoctor) {
-      setFormData(prev => ({ ...prev, doctor_id: selectedDoctor.id, specialty: selectedDoctor.specialty }));
-    } else {
-      setFormData(prev => ({ ...prev, doctor_id: null, specialty: '' }));
-    }
-  }, [selectedDoctor]);
-
-  useEffect(() => {
-    if (selectedPatient) {
-      setFormData(prev => ({ ...prev, patient_id: selectedPatient.id }));
-    } else {
-      setFormData(prev => ({ ...prev, patient_id: null }));
-    }
-  }, [selectedPatient]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -55,67 +30,30 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
     }));
   };
 
-  const handleDoctorSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDoctorSearchTerm(e.target.value);
-    setSelectedDoctor(null); // Clear selected doctor when searching
-  };
-
-  const handlePatientSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPatientSearchTerm(e.target.value);
-    setSelectedPatient(null); // Clear selected patient when searching
-  };
-
-  const handleSelectDoctor = (doctor: Doctor) => {
-    setSelectedDoctor(doctor);
-    setDoctorSearchTerm(`${doctor.name} (${doctor.specialty})`); // Display selected doctor in search input
-  };
-
-  const handleSelectPatient = (patient: Patient) => {
-    setSelectedPatient(patient);
-    setPatientSearchTerm(patient.name); // Display selected patient in search input
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.patient_id || !formData.doctor_id || !formData.appointment_date || !formData.appointment_time) {
+    if (!formData.patient || !formData.date || !formData.time) {
       alert('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
-    await onSubmit({
-      patient_id: formData.patient_id,
-      doctor_id: formData.doctor_id,
-      specialty: formData.specialty,
-      appointment_date: formData.appointment_date,
-      appointment_time: formData.appointment_time,
-      notes: formData.notes,
-    });
+    onSubmit(formData);
     setFormData({
-      patient_id: null,
-      doctor_id: null,
-      specialty: '',
-      appointment_date: '',
-      appointment_time: '',
-      notes: ''
+      patient: '',
+      specialty: 'Cardiologia',
+      date: '',
+      time: '',
+      observations: ''
     });
-    setSelectedDoctor(null);
-    setSelectedPatient(null);
-    setDoctorSearchTerm('');
-    setPatientSearchTerm('');
   };
 
   const handleClose = () => {
     setFormData({
-      patient_id: null,
-      doctor_id: null,
-      specialty: '',
-      appointment_date: '',
-      appointment_time: '',
-      notes: ''
+      patient: '',
+      specialty: 'Cardiologia',
+      date: '',
+      time: '',
+      observations: ''
     });
-    setSelectedDoctor(null);
-    setSelectedPatient(null);
-    setDoctorSearchTerm('');
-    setPatientSearchTerm('');
     onClose();
   };
 
@@ -135,70 +73,40 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Patient Search Input */}
-          <div className="mb-4 relative">
+          <div className="mb-4">
             <label className="block text-gray-700 mb-2">
               Paciente <span className="text-red-500">*</span>
             </label>
-            <input
-              type="text"
-              value={patientSearchTerm}
-              onChange={handlePatientSearchChange}
+            <select
+              name="patient"
+              value={formData.patient}
+              onChange={handleInputChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Buscar paciente por nome"
               required
-            />
-            {patientSearchTerm && !selectedPatient && patients.length > 0 && (
-              <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
-                {patients.map((patientItem) => (
-                  <li
-                    key={patientItem.id}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleSelectPatient(patientItem)}
-                  >
-                    {patientItem.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {selectedPatient && (
-              <p className="mt-2 text-sm text-gray-600">
-                Paciente selecionado: <span className="font-medium">{selectedPatient.name}</span>
-              </p>
-            )}
+            >
+              <option value="">Selecione um paciente</option>
+              {patients.map((patient) => (
+                <option key={patient.id} value={patient.name}>
+                  {patient.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Doctor Search Input */}
-          <div className="mb-4 relative">
-            <label className="block text-gray-700 mb-2">
-              Médico/Especialidade <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={doctorSearchTerm}
-              onChange={handleDoctorSearchChange}
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Especialidade</label>
+            <select
+              name="specialty"
+              value={formData.specialty}
+              onChange={handleInputChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Buscar médico por nome ou especialidade"
-              required
-            />
-            {doctorSearchTerm && !selectedDoctor && doctors.length > 0 && (
-              <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
-                {doctors.map((doctorItem) => (
-                  <li
-                    key={doctorItem.id}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleSelectDoctor(doctorItem)}
-                  >
-                    {doctorItem.name} ({doctorItem.specialty})
-                  </li>
-                ))}
-              </ul>
-            )}
-            {selectedDoctor && (
-              <p className="mt-2 text-sm text-gray-600">
-                Médico selecionado: <span className="font-medium">{selectedDoctor.name} ({selectedDoctor.specialty})</span>
-              </p>
-            )}
+            >
+              {specialties.map((specialty) => (
+                <option key={specialty} value={specialty}>
+                  {specialty}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
@@ -208,8 +116,8 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
               </label>
               <input
                 type="date"
-                name="appointment_date"
-                value={formData.appointment_date}
+                name="date"
+                value={formData.date}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -221,8 +129,8 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
               </label>
               <input
                 type="time"
-                name="appointment_time"
-                value={formData.appointment_time}
+                name="time"
+                value={formData.time}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -233,8 +141,8 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Observações</label>
             <textarea
-              name="notes"
-              value={formData.notes}
+              name="observations"
+              value={formData.observations}
               onChange={handleInputChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="3"
