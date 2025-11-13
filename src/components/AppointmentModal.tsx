@@ -36,10 +36,9 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
       alert('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
-    onSubmit(formData);
     setFormData({
       patient: '',
-      specialty: 'Cardiologia',
+      specialty: '',
       date: '',
       time: '',
       observations: ''
@@ -49,7 +48,7 @@ const AppointmentModal = ({ isOpen, onClose, onSubmit }) => {
   const handleClose = () => {
     setFormData({
       patient: '',
-      specialty: 'Cardiologia',
+      specialty: '',
       date: '',
       time: '',
       observations: ''

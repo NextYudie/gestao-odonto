@@ -1,7 +1,7 @@
 import type { Appointment } from '@/types/Appointment';
 import { useMemo } from 'react';
 
-const AppointmentsTable = ({ appointments }: { appointments: Appointment[] }) => {
+const AppointmentsTable = ({ appointments, onDelete }: { appointments: Appointment[], onDelete: (id: number) => void }) => {
   const upcomingAppointments = useMemo(() => {
     if (!appointments) return [];
     const now = new Date();
@@ -37,7 +37,7 @@ const AppointmentsTable = ({ appointments }: { appointments: Appointment[] }) =>
 
   const handleDelete = (appointmentId) => {
     if (window.confirm('Deseja realmente excluir este agendamento?')) {
-      console.log('Excluindo agendamento:', appointmentId);
+      onDelete(appointmentId);
     }
   };
 

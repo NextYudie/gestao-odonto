@@ -164,8 +164,8 @@ if (conflict) {
 
   static async delete(id: number): Promise<boolean> {
     const query = `DELETE FROM appointments WHERE id = ?`;
-    const result: any = await executeQuery(query, [id]);
-    return result.affectedRows > 0;
+    const result: any[] = await executeQuery(query, [id]);
+    return result && result.length > 0 && result[0].changes > 0;
   }
 
   static async getTodayAppointments(doctorId?: number): Promise<AppointmentWithDetails[]> {
