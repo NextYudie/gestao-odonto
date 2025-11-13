@@ -89,7 +89,7 @@ const RelatoriosPage: React.FC = () => {
             </div>
 
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Faturamento</h2>
+              <h2 className="text-xl font-semibold mb-4">Faturamento Mensal</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
                   <span>Receita Total</span>
