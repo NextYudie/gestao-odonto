@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
   return (
     <div className="sidebar w-64 min-h-screen text-white p-4 hidden md:block">
       <div className="text-center mb-8">
-        <h1 className="text-xl font-bold">Clínica Sahur</h1>
+        <h1 className="text-xl font-bold">Clínica do Yudie</h1>
         <p className="text-sm opacity-80">Sistema de Gestão Médica</p>
       </div>
 
