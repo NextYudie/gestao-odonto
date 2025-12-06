@@ -15,7 +15,7 @@ const Agendamentos: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { appointments, deleteAppointment } = useAppointments();
+  const { appointments } = useAppointments();
 
   const handleDayClick = (date: Date) => {
     setSelectedDate(date);
@@ -47,7 +47,7 @@ const Agendamentos: React.FC = () => {
         onDayClick={handleDayClick}
       />
 
-      <AppointmentsTable appointments={appointments.data} onDelete={deleteAppointment} />
+      <AppointmentsTable appointments={appointments.data} />
 
       <AppointmentsForDayModal 
         isOpen={isModalOpen}

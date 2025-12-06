@@ -138,39 +138,6 @@
       "status": "scheduled",
       "notes": "sdadada",
       "paid": true
-    },
-    {
-      "id": 6,
-      "patient_id": 2,
-      "doctor_id": 1,
-      "specialty": "Estética",
-      "appointment_date": "2025-11-13",
-      "appointment_time": "12:26",
-      "duration": 30,
-      "status": "scheduled",
-      "notes": "teste"
-    },
-    {
-      "id": 7,
-      "patient_id": 2,
-      "doctor_id": 1,
-      "specialty": "Estética",
-      "appointment_date": "2025-11-13",
-      "appointment_time": "15:32",
-      "duration": 30,
-      "status": "scheduled",
-      "notes": "teste"
-    },
-    {
-      "id": 12,
-      "patient_id": 1,
-      "doctor_id": 1,
-      "specialty": "Cardiologia",
-      "appointment_date": "2025-11-14",
-      "appointment_time": "15:35",
-      "duration": 30,
-      "status": "scheduled",
-      "notes": "teste233333"
     }
   ],
   "medical_records": [],
