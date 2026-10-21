@@ -1,4 +1,4 @@
-import { executeQuery, executeQuerySingle } from '@/config/database';
+import { executeQuery, executeQuerySingle, executeMutation } from '@/config/database';
 import { Anamnese } from '@/types';
 
 const parseJsonString = (value: any) => {
@@ -66,7 +66,7 @@ export class AnamneseModel {
     ];
     console.log('AnamneseModel.create - params:', params);
 
-    const result: any = await executeQuery(query, params);
+    const result = await executeMutation(query, params);
     
     return result.insertId;
   }
@@ -89,14 +89,14 @@ export class AnamneseModel {
     values.push(id);
     
     const query = `UPDATE anamneses SET ${fields.join(', ')} WHERE id = ?`;
-    const result: any = await executeQuery(query, values);
+    const result = await executeMutation(query, values);
     
     return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = `DELETE FROM anamneses WHERE id = ?`;
-    const result: any = await executeQuery(query, [id]);
+    const result = await executeMutation(query, [id]);
     return result.affectedRows > 0;
   }
 }

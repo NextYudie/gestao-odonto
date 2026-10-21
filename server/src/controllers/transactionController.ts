@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { executeQuery, executeQuerySingle } from '@/config/database';
+import { executeQuery, executeMutation } from '@/config/database';
 import { Transaction } from '@/models/Transaction';
 
 export const getFinancialSummary = async (req: Request, res: Response) => {
@@ -47,11 +47,8 @@ export const createTransaction = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
-    const query = 'INSERT INTO transactions (date, description, type, amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)';
-    const now = new Date().toISOString();
-    const params = [date, description, type, amount, now, now];
-
-    const result = await executeQuerySingle(query, params);
+    const query = 'INSERT INTO transactions (date, description, type, amount) VALUES (?, ?, ?, ?)';
+    const result = await executeMutation(query, [date, description, type, amount]);
 
     res.status(201).json({ success: true, message: 'Transaction created successfully', data: { id: result.insertId } });
   } catch (error) {

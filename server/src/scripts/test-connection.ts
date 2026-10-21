@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { createConnection } from '../config/database';
+import { createConnection, executeQuery } from '../config/database';
 
 config();
 
@@ -10,18 +10,17 @@ async function testConnection() {
   console.log(`User: ${process.env.DB_USER}`);
   
   try {
-    const connection = await createConnection();
+    await createConnection();
     console.log('✅ Database connection successful!');
     
-    const [rows] = await connection.execute('SELECT VERSION() as version');
-    console.log('📊 MySQL version:', (rows as any)[0].version);
+    const rows = await executeQuery<{ version: string }>('SELECT VERSION() as version');
+    console.log('📊 MySQL version:', rows[0]?.version);
     
-    const [tables] = await connection.execute('SHOW TABLES');
-    console.log('📋 Tables found:', (tables as any).length);
+    const tables = await executeQuery('SHOW TABLES');
+    console.log('📋 Tables found:', tables.length);
     
-    connection.end();
     console.log('🔒 Connection closed');
-    
+    process.exit(0);
   } catch (error) {
     console.error('❌ Database connection failed:');
     console.error(error);

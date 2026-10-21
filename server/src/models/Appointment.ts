@@ -1,4 +1,4 @@
-import { executeQuery, executeQuerySingle } from '@/config/database';
+import { executeQuery, executeQuerySingle, executeMutation } from '@/config/database';
 import { Appointment, PaginatedResponse } from '@/types';
 
 interface AppointmentWithDetails extends Appointment {
@@ -120,7 +120,7 @@ if (conflict) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
-    const result: any = await executeQuery(query, [
+    const result = await executeMutation(query, [
       appointmentData.patient_id,
       appointmentData.doctor_id,
       appointmentData.specialty,
@@ -150,21 +150,19 @@ if (conflict) {
     values.push(id);
     
     const query = `UPDATE appointments SET ${fields.join(', ')} WHERE id = ?`;
-    const result: any[] = await executeQuery(query, values);
-    
-    // The custom JSON parser returns [{ changes: 1 }] on success
-    return result && result.length > 0 && result[0].changes > 0;
+    const result = await executeMutation(query, values);
+    return result.affectedRows > 0;
   }
 
   static async updateStatus(id: number, status: Appointment['status']): Promise<boolean> {
     const query = `UPDATE appointments SET status = ? WHERE id = ?`;
-    const result: any = await executeQuery(query, [status, id]);
+    const result = await executeMutation(query, [status, id]);
     return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = `DELETE FROM appointments WHERE id = ?`;
-    const result: any = await executeQuery(query, [id]);
+    const result = await executeMutation(query, [id]);
     return result.affectedRows > 0;
   }
 

@@ -1,4 +1,4 @@
-import { executeQuery, executeQuerySingle } from "@/config/database";
+import { executeQuery, executeQuerySingle, executeMutation } from "@/config/database";
 import { User, UserResponse } from "@/types";
 import bcrypt from "bcryptjs";
 
@@ -37,7 +37,7 @@ export class UserModel {
       VALUES (?, ?, ?, ?, ?, ?)
     `;
 
-    const result: any = await executeQuery(query, [
+    const result = await executeMutation(query, [
       userData.name,
       userData.email,
       hashedPassword,
@@ -88,14 +88,14 @@ export class UserModel {
     values.push(id);
 
     const query = `UPDATE users SET ${fields.join(", ")} WHERE id = ?`;
-    const result: any = await executeQuery(query, values);
+    const result = await executeMutation(query, values);
 
     return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = `DELETE FROM users WHERE id = ?`;
-    const result: any = await executeQuery(query, [id]);
+    const result = await executeMutation(query, [id]);
     return result.affectedRows > 0;
   }
 

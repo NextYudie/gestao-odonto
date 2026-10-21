@@ -1,4 +1,4 @@
-import { executeQuery, executeQuerySingle } from '@/config/database';
+import { executeQuery, executeQuerySingle, executeMutation } from '@/config/database';
 import { Odontogram } from '@/types';
 
 export class OdontogramModel {
@@ -17,20 +17,18 @@ export class OdontogramModel {
       INSERT INTO odontograms ( 
         patient_id, 
         chart_data, 
-        chart_type,
-        created_at
+        chart_type
       ) 
-      VALUES (?, ?, ?, ?)
+      VALUES (?, ?, ?)
     `;
     
-    const result: any = await executeQuery(query, [
+    const result = await executeMutation(query, [
       odontogramData.patient_id,
       odontogramData.chart_data ? JSON.stringify(odontogramData.chart_data) : null,
       odontogramData.chart_type,
-      new Date().toISOString(),
     ]);
     
-    return result[0].insertId;
+    return result.insertId;
   }
 
   static async update(id: number, odontogramData: Partial<Omit<Odontogram, 'id' | 'patient_id' | 'created_at'>>): Promise<boolean> {
@@ -51,14 +49,14 @@ export class OdontogramModel {
     values.push(id);
     
     const query = `UPDATE odontograms SET ${fields.join(', ')} WHERE id = ?`;
-    const result: any = await executeQuery(query, values);
+    const result = await executeMutation(query, values);
     
     return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = `DELETE FROM odontograms WHERE id = ?`;
-    const result: any = await executeQuery(query, [id]);
+    const result = await executeMutation(query, [id]);
     return result.affectedRows > 0;
   }
 }

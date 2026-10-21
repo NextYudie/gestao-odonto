@@ -1,4 +1,4 @@
-import { executeQuery, executeQuerySingle } from '@/config/database';
+import { executeQuery, executeQuerySingle, executeMutation } from '@/config/database';
 import { Patient, PaginatedResponse } from '@/types';
 
 export class PatientModel {
@@ -53,13 +53,11 @@ export class PatientModel {
 
   static async create(patientData: Omit<Patient, 'id' | 'created_at' | 'updated_at'>): Promise<number> {
     const query = `
-      INSERT INTO patients (name, email, phone, birth_date, cpf, address, emergency_contact, medical_history, status, created_at, updated_at) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO patients (name, email, phone, birth_date, cpf, address, emergency_contact, medical_history, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    
-    const now = new Date().toISOString(); // Get current timestamp in ISO format
 
-    const result: any = await executeQuery(query, [
+    const result = await executeMutation(query, [
       patientData.name,
       patientData.email || null,
       patientData.phone || null,
@@ -69,8 +67,6 @@ export class PatientModel {
       patientData.emergency_contact || null,
       patientData.medical_history || null,
       patientData.status || 'active',
-      now, // created_at
-      now, // updated_at
     ]);
     
     return result.insertId;
@@ -89,26 +85,23 @@ export class PatientModel {
 
     if (fields.length === 0) return false;
 
-    fields.push(`updated_at = ?`);
-    values.push(new Date().toISOString()); // Set updated_at to current timestamp
-
     values.push(id);
     
     const query = `UPDATE patients SET ${fields.join(', ')} WHERE id = ?`;
-    const result: any = await executeQuery(query, values);
+    const result = await executeMutation(query, values);
     
-    return result.length > 0 && result[0].changes > 0;
+    return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = `DELETE FROM patients WHERE id = ?`;
-    const result: any = await executeQuery(query, [id]);
+    const result = await executeMutation(query, [id]);
     return result.affectedRows > 0;
   }
 
   static async updateStatus(id: number, status: 'active' | 'inactive'): Promise<boolean> {
     const query = `UPDATE patients SET status = ? WHERE id = ?`;
-    const result: any = await executeQuery(query, [status, id]);
+    const result = await executeMutation(query, [status, id]);
     return result.affectedRows > 0;
   }
 

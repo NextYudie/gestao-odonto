@@ -1,4 +1,4 @@
-import { executeQuery, executeQuerySingle } from "@/config/database";
+import { executeQuery, executeQuerySingle, executeMutation } from "@/config/database";
 import { Doctor, PaginatedResponse } from "@/types";
 
 export class DoctorModel {
@@ -58,21 +58,17 @@ export class DoctorModel {
     doctorData: Omit<Doctor, "id" | "created_at" | "updated_at">
   ): Promise<number> {
     const query = `
-      INSERT INTO doctors (name, email, phone, cro, specialty, status, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO doctors (name, email, phone, cro, specialty, status)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
 
-    const now = new Date().toISOString(); // Get current timestamp in ISO format
-
-    const result: any = await executeQuery(query, [
+    const result = await executeMutation(query, [
       doctorData.name,
       doctorData.email || null,
       doctorData.phone || null,
       doctorData.cro,
       doctorData.specialty,
       doctorData.status || "active",
-      now, // created_at
-      now, // updated_at
     ]);
 
     return result.insertId;
@@ -105,14 +101,13 @@ export class DoctorModel {
     values.push(id);
 
     const query = `UPDATE doctors SET ${fields.join(", ")} WHERE id = ?`;
-    const result: any = await executeQuery(query, values);
-    console.log(result);
-    return result.length > 0 && result[0].changes > 0;
+    const result = await executeMutation(query, values);
+    return result.affectedRows > 0;
   }
 
   static async delete(id: number): Promise<boolean> {
     const query = `DELETE FROM doctors WHERE id = ?`;
-    const result: any = await executeQuery(query, [id]);
+    const result = await executeMutation(query, [id]);
     return result.affectedRows > 0;
   }
 
@@ -121,7 +116,7 @@ export class DoctorModel {
     status: "active" | "inactive"
   ): Promise<boolean> {
     const query = `UPDATE doctors SET status = ? WHERE id = ?`;
-    const result: any = await executeQuery(query, [status, id]);
+    const result = await executeMutation(query, [status, id]);
     return result.affectedRows > 0;
   }
 

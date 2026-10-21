@@ -1,219 +1,107 @@
-import fs from "fs";
-import path from "path";
+import mysql from 'mysql2/promise';
+import { config } from 'dotenv';
 
-interface Database {
-  users: any[];
-  patients: any[];
-  appointments: any[];
-  medical_records: any[];
-  notifications: any[];
-  anamneses: any[];
-  odontograms: any[];
-}
+config();
 
-let db: Database | null = null;
-let dbPath: string;
+let pool: mysql.Pool | null = null;
 
-export const createConnection = (): Database => {
-  if (db) {
-    return db;
+export const createConnection = async (): Promise<void> => {
+  if (pool) return;
+
+  pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306'),
+    database: process.env.DB_NAME || 'clinic_management',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    timezone: 'Z',
+    dateStrings: false,
+  });
+
+  // Test the connection
+  const connection = await pool.getConnection();
+  connection.release();
+};
+
+export const getPool = (): mysql.Pool => {
+  if (!pool) {
+    throw new Error('Database pool not initialized. Call createConnection() first.');
   }
+  return pool;
+};
 
-  const databaseDir = path.join(__dirname, "../../database");
-  dbPath = path.join(databaseDir, "clinic.json");
-
-  if (!fs.existsSync(databaseDir)) {
-    fs.mkdirSync(databaseDir, { recursive: true });
-  }
-
-  try {
-    if (fs.existsSync(dbPath)) {
-      const data = fs.readFileSync(dbPath, "utf8");
-      db = JSON.parse(data);
-      const tables = ["users", "patients", "appointments", "medical_records", "notifications", "anamneses", "odontograms", "transactions"];
-      let dbUpdated = false;
-      tables.forEach(table => {
-        if (!db[table]) {
-          db[table] = [];
-          dbUpdated = true;
-        }
-      });
-      if (dbUpdated) {
-        saveDatabase();
-      }
-    } else {
-      db = {
-        users: [],
-        patients: [],
-        appointments: [],
-        medical_records: [],
-        notifications: [],
-        anamneses: [],
-        odontograms: [],
-      };
-      saveDatabase();
-    }
-
-    console.log("✅ JSON database connected successfully");
-    return db!;
-  } catch (error) {
-    console.error("❌ JSON database connection failed:", error);
-    throw error;
+export const closeConnection = async (): Promise<void> => {
+  if (pool) {
+    await pool.end();
+    pool = null;
+    console.log('📪 Database connection pool closed');
   }
 };
 
-const saveDatabase = (): void => {
-  if (db && dbPath) {
-    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
-  }
-};
-
-export const closeConnection = (): void => {
-  if (db) {
-    saveDatabase();
-    db = null;
-    console.log("📪 Database connection closed");
-  }
-};
-
-const generateId = (table: string): number => {
-  if (!db) return 1;
-  const records = (db as any)[table] || [];
-  return records.length > 0
-    ? Math.max(...records.map((r: any) => r.id || 0)) + 1
-    : 1;
-};
-
-export const executeQuery = <T = any>(
+/**
+ * Executes a SQL query and returns all matching rows.
+ */
+export const executeQuery = async <T = any>(
   query: string,
   params: any[] = []
-): T[] => {
-  if (!db) {
-    db = createConnection();
-  }
-
-  if (!db) return [];
-
-  try {
-    const trimmedQuery = query.trim().toUpperCase();
-
-    // Simple query parser for JSON database
-    if (trimmedQuery.startsWith("SELECT")) {
-      // Parse table name (very basic)
-      const tableMatch = query.match(/FROM\s+(\w+)/i);
-      if (!tableMatch || !tableMatch[1]) return [];
-
-      const tableName = tableMatch[1].toLowerCase();
-      let records = (db as any)[tableName] || [];
-
-      // Improved WHERE clause support
-      const whereMatch = query.match(/WHERE\s+(.+?)(?:\s+ORDER|\s+LIMIT|$)/i);
-      if (whereMatch && whereMatch[1]) {
-          const conditions = whereMatch[1].split(/ and /i);
-          let paramIndex = 0;
-          conditions.forEach(condition => {
-              const trimmedCondition = condition.trim();
-              if (trimmedCondition === '1=1') return;
-
-              if (trimmedCondition.includes('=')) {
-                  const [field, value] = trimmedCondition.split(/\s*=\s*/);
-                  if (value.trim() === '?') {
-                      const paramValue = params[paramIndex++];
-                      const cleanField = field.split('.').pop()?.trim(); // 'a.patient_id' -> 'patient_id'
-                      if (cleanField && paramValue !== undefined) {
-                          records = records.filter(r => r[cleanField] == paramValue);
-                      }
-                  }
-              }
-          });
-      }
-
-      return records as T[];
-    } else if (trimmedQuery.startsWith("INSERT")) {
-      const tableMatch = query.match(/INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)/i); // Match table and columns
-      if (!tableMatch || !tableMatch[1] || !tableMatch[2]) return [];
-
-      const tableName = tableMatch[1].toLowerCase();
-      const columns = tableMatch[2].split(",").map((c) => c.trim());
-
-      const newRecord: any = { id: generateId(tableName) };
-
-      columns.forEach((col, index) => {
-        newRecord[col] = params[index]; // Directly map parameter to column
-      });
-
-      (db as any)[tableName].push(newRecord);
-      saveDatabase();
-
-      return [{ insertId: newRecord.id, changes: 1 } as any];
-    } else if (trimmedQuery.startsWith("UPDATE")) {
-      const tableMatch = query.match(/UPDATE\s+(\w+)/i);
-      if (!tableMatch || !tableMatch[1]) return [];
-
-      const tableName = tableMatch[1].toLowerCase();
-      const records = (db as any)[tableName] || [];
-
-      const whereMatch = query.match(/WHERE\s+id\s*=\s*\?/i);
-      if (whereMatch && params.length > 0) {
-        const recordIndex = records.findIndex(
-          (r: any) => r.id === params[params.length - 1]
-        );
-        if (recordIndex !== -1) {
-          // Simple SET clause parsing
-          const setMatch = query.match(/SET\s+(.+?)\s+WHERE/i);
-          if (setMatch && setMatch[1]) {
-            const setParts = setMatch[1].split(",");
-            setParts.forEach((part, index) => {
-              const [column] = part.trim().split("=");
-              if (column) {
-                records[recordIndex][column.trim()] = params[index];
-              }
-            });
-          }
-          saveDatabase();
-          return [{ changes: 1 } as any];
-        }
-      }
-    } else if (trimmedQuery.startsWith("DELETE")) {
-      const tableMatch = query.match(/DELETE\s+FROM\s+(\w+)/i);
-      if (!tableMatch || !tableMatch[1]) return [];
-
-      const tableName = tableMatch[1].toLowerCase();
-      const records = (db as any)[tableName] || [];
-
-      const whereMatch = query.match(/WHERE\s+id\s*=\s*\?/i);
-      if (whereMatch && params.length > 0) {
-        const initialLength = records.length;
-        (db as any)[tableName] = records.filter((r: any) => r.id !== params[0]);
-        const changes = initialLength - (db as any)[tableName].length;
-        saveDatabase();
-        return [{ changes } as any];
-      }
-    }
-
-    return [{ success: true } as any];
-  } catch (error) {
-    console.error("Query error:", error);
-    throw error;
-  }
+): Promise<T[]> => {
+  const db = getPool();
+  const [rows] = await db.execute<mysql.RowDataPacket[]>(query, params);
+  return rows as unknown as T[];
 };
 
+/**
+ * Executes a SQL query and returns only the first row, or null if not found.
+ */
 export const executeQuerySingle = async <T = any>(
   query: string,
   params: any[] = []
 ): Promise<T | null> => {
-  const rows = await executeQuery<T>(query, params); // Adicionado await
-  return rows[0] || null;
+  const rows = await executeQuery<T>(query, params);
+  return rows[0] ?? null;
 };
 
-export const executeTransaction = (
+/**
+ * Executes a modifying SQL query (INSERT, UPDATE, DELETE).
+ * Returns the mysql2 ResultSetHeader with insertId, affectedRows, etc.
+ */
+export const executeMutation = async (
+  query: string,
+  params: any[] = []
+): Promise<mysql.ResultSetHeader> => {
+  const db = getPool();
+  const [result] = await db.execute<mysql.ResultSetHeader>(query, params);
+  return result;
+};
+
+/**
+ * Executes multiple queries in a single transaction.
+ * Rolls back automatically on error.
+ */
+export const executeTransaction = async (
   queries: Array<{ query: string; params?: any[] }>
-): any[] => {
-  const results: any[] = [];
-  for (const { query, params = [] } of queries) {
-    const result = executeQuery(query, params);
-    results.push(result[0] || { success: true });
+): Promise<mysql.ResultSetHeader[]> => {
+  const db = getPool();
+  const connection = await db.getConnection();
+  const results: mysql.ResultSetHeader[] = [];
+
+  try {
+    await connection.beginTransaction();
+
+    for (const { query, params = [] } of queries) {
+      const [result] = await connection.execute<mysql.ResultSetHeader>(query, params);
+      results.push(result);
+    }
+
+    await connection.commit();
+    return results;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
   }
-  saveDatabase();
-  return results;
 };
